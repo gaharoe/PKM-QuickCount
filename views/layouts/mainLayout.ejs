@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/libs/font-poppins.css">
+    <script src="/libs/tailwind.js"></script>
+    <script src="/libs/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            font-family: 'Poppins';
+        }
+    </style>
+</head>
+<body class="overflow-hidden select-none flex bg-neutral-200">
+    <%- include("../partials/sidebar") %>
+    <main class="flex-1 flex flex-col">
+        <div class="transition-all duration-200 fixed top-0 right-0 left-64 h-10 bg-neutral-50 shadow-md/5 flex items-center px-3" id="top-bar">
+            <button class="text-sky-950 transition-all duration-300 p-1 rounded-md outline outline-[rgb(0,0,0,0)] hover:outline-[rgb(0,0,0,.5)] outline-dashed" id="slider">
+                <svg width="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 18.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 6.32001H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <p class="ml-5 text-sm text-sky-950" id="position"><%=page%></p>
+        </div>
+        <div id="content" class="pt-14 px-4 max-h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
+            <%- body %>
+        </div>
+    </main>
+    <script src="/scripts/mainLayout.js"></script>
+    <script>
+        const socket = new WebSocket("ws://localhost");
+        socket.addEventListener("message", (event) => {
+            if (event.data === "reload") {
+                window.location.reload();
+            }
+        });
+        
+    </script>
+</body>
+</html>
