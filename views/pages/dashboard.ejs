@@ -21,12 +21,12 @@
             </div>
         </div>
 
-        <div class="p-3 bg-white mt-3 rounded-md h-90 mb-3">
+        <div class="p-3 bg-white mt-3 rounded-md h-90 mb-3 shadow shadow-md/5">
             <canvas id="grafik-polling"></canvas>
         </div>
 
         <!-- candidate scroll -->
-        <div class="w-full bg-white rounded-md shadow-md px-3 pt-3">
+        <div class="w-full bg-white rounded-md shadow shadow-md/5 px-3 pt-3">
             <div
                 class="pb-3 overflow-x-auto flex gap-3 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
                 <!-- cards -->
@@ -133,14 +133,23 @@
                 </div>
             </div>
 
-        <div class="bg-white rounded-md mb-3 h-60 p-3">
+        <div class="bg-white rounded-md mb-3 h-60 p-3 shadow shadow-md/5">
             <canvas id="grafik-tps"></canvas>
         </div>
 
 
         <div class="flex-1 p-3 text-neutral-600 w-full bg-white rounded-md shadow shadow-md/5">
             <h1 class="mb-3">Log Aktivitas</h1>
-            <div class="w-full h-45 bg-neutral-100"></div>
+            <div class="w-full h-45 bg-neutral-200 px-2 py-1 overflow-y-auto text-sm">
+                <p>[2025:11:11 22:30] TPS 1 VOTED</p>
+                <p>[2025:11:11 22:30] TPS 2 VOTED</p>
+                <p>[2025:11:11 22:31] TPS 1 VOTED</p>
+                <p>[2025:11:11 22:31] TPS 4 VOTED</p>
+                <p>[2025:11:11 22:32] TPS 3 VOTED</p>
+                <p>[2025:11:11 22:33] TPS 2 VOTED</p>
+                <p>[2025:11:11 22:33] TPS 1 VOTED</p>
+                <p>[2025:11:11 22:33] TPS 2 VOTED</p>
+            </div>
         </div>
     </div>
 </div>
@@ -207,29 +216,32 @@
     });
 
     window.grafikTps = new Chart(ctx = $id("grafik-tps"), {
-        type: "pie",
+        type: "bar",
         data: {
-            // labels: ["A", "B", "C", "D", "E"],
+            labels: ["TPS 1", "TPS 2", "TPS 3", "TPS 4"],
             datasets: [
                 {
                     label: "Grafik TPS",
-                    data: [250, 304, 255, 105, 112],
-                    borderWidth: 3,
-                    hoverOffset: 12
+                    data: [250, 304, 255, 112],
+                    borderWidth: 1,
+                    hoverOffset: 12,
+                    borderRadius: 50
                 }
             ]
         },
         options: {
+            indexAxis: "y",
             maintainAspectRatio: false,
             plugins: {
                 title: {
-                    display: true,
+                    display: false,
                     text: "Grafik TPS",
                     color: "#1E293B",
                     font: { size: 1, weight: "medium" },
                     // padding: { top: 10, bottom: 20 }
                 },
                 legends: {
+                    display: true,
                     position: "left"
                 },
                 tooltip: {
