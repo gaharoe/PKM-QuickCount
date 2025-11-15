@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%=title%></title>
     <link rel="stylesheet" href="/libs/font-poppins.css">
     <script src="/libs/tailwind.js"></script>
     <script src="/libs/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const socket = io();
+    </script>
     <style>
         * {
             font-family: 'Poppins';
@@ -28,19 +31,19 @@
             </button>
             <p class="ml-5 text-sm text-sky-950" id="position"><%=page%></p>
         </div>
-        <div id="content" class="pt-14 px-4 max-h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
+        <div id="content" class="min-w-0 pt-14 px-4 max-h-screen h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
             <%- body %>
         </div>
     </main>
     <script src="/scripts/mainLayout.js"></script>
     <script>
-        const socket = new WebSocket("ws://localhost");
-        socket.addEventListener("message", (event) => {
+        const refresher = new WebSocket("ws://localhost");
+        refresher.addEventListener("message", (event) => {
             if (event.data === "reload") {
                 window.location.reload();
             }
         });
-        
+
     </script>
 </body>
 </html>

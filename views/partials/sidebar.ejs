@@ -1,18 +1,18 @@
-<nav class="transition-all duration-200 w-64 bg-sky-950 h-[100svh] p-5 flex flex-col justify-between" id="sidebar">
+<nav class="transition-all duration-200 w-64 bg-sky-950 h-[100svh] p-5 flex flex-col justify-between min-w-64" id="sidebar">
     <div>
         <div class="mb-6 w-full flex items-center gap-3 bg-[rgb(201,212,242,.2)] rounded-full p-2">
             <div class="w-9 h-9 rounded-full bg-slate-100 flex justify-center items-center text-lg font-extrabold text-sky-600">A</div>
             <h1 class="font-bold text-stone-200 text-md">Admin</h1>
         </div>
         <div class="text-stone-300 flex flex-col gap-7 font-light transition-all duration-200 text-sm" id="nav-btns">
-            <a class="flex gap-3 items-center hover:underline" href="/dashboard" id="nav-dashboard">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/dashboard" id="nav-dashboard">
                 <svg fill="#e5e5e5" width="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="dashboard" class="icon glyph">
                     <rect x="2" y="2" width="9" height="11" rx="2"></rect><rect x="13" y="2" width="9" height="7" rx="2"></rect><rect x="2" y="15" width="9" height="7" rx="2"></rect>
                     <rect x="13" y="11" width="9" height="11" rx="2"></rect>
                 </svg>
                 Dashboard
             </a>
-            <a class="flex gap-3 items-center hover:underline" href="/candidate" id="nav-candidate">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/candidate" id="nav-candidate">
                 <svg width="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_98_196)">
                         <path d="M11.914 5.00002C13.295 5.00002 14.414 3.88102 14.414 2.50003C14.414 1.119 13.295 0 11.914 0C10.5331 0 9.41406 1.119 9.41406 2.49998C9.41406 3.88102 10.5331 5.00002 11.914 5.00002Z" fill="#E5E5E5"/>
@@ -30,25 +30,25 @@
                 </svg>
                 Manajemen Kandidat
             </a>
-            <a class="flex gap-3 items-center hover:underline" href="/tps" id="">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/tps" id="">
                 <svg width="18px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#F0F0F0"/>
                 </svg>
                 Manajemen TPS
             </a>
-            <a class="flex gap-3 items-center hover:underline" href="/settings" id="nav-settings">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/settings" id="nav-settings">
                 <svg width="18px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M12.4994 16.6667C10.2169 16.6667 8.36775 14.8017 8.36775 12.5C8.36775 10.1983 10.2169 8.33333 12.4994 8.33333C14.7819 8.33333 16.6319 10.1983 16.6319 12.5C16.6319 14.8017 14.7819 16.6667 12.4994 16.6667ZM24.1727 15.4467L22.2369 14.32C22.3452 13.7283 22.4169 13.1242 22.4169 12.5C22.4169 11.8767 22.3452 11.2717 22.2369 10.68L24.1727 9.55332C24.9636 9.09332 25.2336 8.07333 24.7769 7.27666L23.1244 4.39C22.6686 3.59334 21.6569 3.31918 20.8669 3.78001L18.9111 4.9175C17.9977 4.13417 16.9594 3.49333 15.8053 3.08083V1.66667C15.8053 0.746667 15.0653 0 14.1519 0H10.8469C9.93358 0 9.19358 0.746667 9.19358 1.66667V3.08083C8.03941 3.49333 7.00108 4.13417 6.08775 4.9175L4.13191 3.78001C3.34191 3.31918 2.33025 3.59334 1.87442 4.39L0.221914 7.27666C-0.234753 8.07333 0.036079 9.09332 0.826079 9.55332L2.76192 10.68C2.65358 11.2717 2.58191 11.8767 2.58191 12.5C2.58191 13.1242 2.65358 13.7283 2.76192 14.32L0.826079 15.4467C0.036079 15.9067 -0.234753 16.9267 0.221914 17.7233L1.87442 20.61C2.33025 21.4067 3.34191 21.6808 4.13191 21.22L6.08775 20.0825C7.00108 20.8658 8.03941 21.5075 9.19358 21.9192V23.3333C9.19358 24.2533 9.93358 25 10.8469 25H14.1519C15.0653 25 15.8053 24.2533 15.8053 23.3333V21.9192C16.9594 21.5075 17.9977 20.8658 18.9111 20.0825L20.8669 21.22C21.6569 21.6808 22.6686 21.4067 23.1244 20.61L24.7769 17.7233C25.2336 16.9267 24.9636 15.9067 24.1727 15.4467ZM12.4994 10C11.1302 10 10.0203 11.12 10.0203 12.5C10.0203 13.8808 11.1302 15 12.4994 15C13.8686 15 14.9786 13.8808 14.9786 12.5C14.9786 11.12 13.8686 10 12.4994 10Z" fill="#E5E5E5"/>
                 </svg>
                 Pengaturan Sistem
             </a>
-            <a class="flex gap-3 items-center hover:underline" href="/reports" id="nav-reports">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/reports" id="nav-reports">
                 <svg width="18px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.0625 9.28125H8.4375V23.625H5.0625V9.28125ZM18.5625 13.5V23.625H21.9375V13.5H18.5625ZM11.8125 23.625H15.1875V3.375H11.8125V23.625Z" fill="#E5E5E5"/>
                 </svg>
                 Hasil & Laporan
             </a>
-            <a class="flex gap-3 items-center hover:underline" href="/log" id="nav-log">
+            <a class="flex gap-3 items-center hover:underline" href="/admin/log" id="nav-log">
                 <svg width="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path fill="none" stroke="#e5e5e5" stroke-width="2" d="M3,1 L3,23 L16,23 L21,18 L21,1 L3,1 Z M6,17 L11,17 M6,13 L18,13 M6,9 L16,9 M3,5 L21,5 M21,17 L15,17 L15,23"/>
                 </svg>

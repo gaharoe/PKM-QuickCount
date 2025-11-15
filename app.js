@@ -23,6 +23,44 @@ const io = new Server(server, {
     }
 });
 
+// vars ----------------------
+db.ref("kandidat").on("value", (snapshot) => {
+    let kandidat = snapshot.val();
+    let lables = Object.keys(kandidat);
+    let data = Object.values(kandidat).map(item => item.suara); 
+    io.emit("dashboard-polling-update", {lables, data});
+});
+
+db.ref("TPS").on("value", (snapshot) => {});
+
+// db.ref()
+async function renameKey(path, oldKey, newKey) {
+    const ref = db.ref(path);
+    const snapshot = await ref.child(oldKey).once("value");
+    if (!snapshot.exists()) return;
+    const oldData = snapshot.val();
+    // buat key baru
+    await ref.child(newKey).set(oldData);
+    // hapus key lama
+    await ref.child(oldKey).remove();
+}
+
+
+io.on("connection", async (socket) => {
+    const endpoint = socket.handshake.headers.referer.split("/");
+    if(endpoint[3] == "dashboard"){
+        db.ref("kandidat").once("value", (snapshot) => {
+            let kandidat = snapshot.val();
+            let lables = Object.keys(kandidat);
+            let data = Object.values(kandidat).map(item => item.suara); 
+            socket.emit("admin-polling-update", {lables: lables, data:data});
+            // console.log("success");
+            // io.emit("polling-update", {lables, data});
+        });
+    }
+});
+
+
 chokidar.watch("views").on("change", path => {
     wss.clients.forEach(client =>{
         if (client.readyState === WebSocket.OPEN) {
@@ -33,42 +71,46 @@ chokidar.watch("views").on("change", path => {
 
 function isFetch(req) {return req.headers["x-requested-with"] === "XMLHttpRequest";}
 
-app.get("/dashboard", (req, res) => {
+app.get("/admin/dashboard", async (req, res) => {
+    const dataKandidat = await db.ref("kandidat").once("value");
+    const kandidat = dataKandidat.val(); 
+    kandidat.total = dataKandidat.numChildren();
     res.render("pages/dashboard", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Dashboard - Smansekata Vote",
-        page: "Dashboard"
+        page: "Dashboard",
+        kandidat
     });
 });
-app.get("/candidate", (req, res) => {
+app.get("/admin/candidate", (req, res) => {
     res.render("pages/candidate", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Candidate - Smansekata Vote",
         page: "Daftar Kandidat"
     });
 });
-app.get("/tps", (req, res) => {
+app.get("/admin/tps", (req, res) => {
     res.render("pages/tps", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "TPS - Smansekata Vote",
         page: "TPS"
     });
 });
-app.get("/settings", (req, res) => {
+app.get("/admin/settings", (req, res) => {
     res.render("pages/settings", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Pengaturan - Smansekata Vote",
         page: "Pengaturan"
     });
 });
-app.get("/reports", (req, res) => {
+app.get("/admin/reports", (req, res) => {
     res.render("pages/reports", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Hasil dan Laporan - Smansekata Vote",
         page: "Hasil dan Laporan"
     });
 });
-app.get("/log", (req, res) => {
+app.get("/admin/log", (req, res) => {
     res.render("pages/log", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Log Aktivitas - Smansekata Vote",
@@ -79,6 +121,8 @@ app.get("/log", (req, res) => {
 app.get("/", (req, res) => {
     res.json({msg: 'page under maintenance'});
 });
+
+
 
 server.listen(80, () => {
     console.log("server running");

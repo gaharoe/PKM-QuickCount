@@ -8,10 +8,10 @@ $("#slider").click(function (e) {
 $("#nav-btns").click(function (e) { 
     e.preventDefault();
     const link = e.target.closest("a");
-    const endpoint = link.getAttribute("href");
-    let page = endpoint.split("/")[1];
-    page = page.charAt(0).toUpperCase() + page.slice(1);
     if(link && link.getAttribute("href").startsWith("/")){
+        const endpoint = link.getAttribute("href");
+        let page = endpoint.split("/")[2];
+        page = page.charAt(0).toUpperCase() + page.slice(1);
         let state = {page}
         history.pushState(state, page, endpoint);
         $("#position").text(page);
@@ -24,3 +24,4 @@ $("#nav-btns").click(function (e) {
         });
     }
 });
+

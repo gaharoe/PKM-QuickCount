@@ -1,11 +1,11 @@
 <div class="pb-3 grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-3 w-full">
     <!-- Bagian kiri -->
-    <div class="min-w-0 overflow-hidden">
+    <div class="min-w-0 overflow-hidden flex flex-col">
         <!-- quantity data -->
         <div class="mb-3 grid grid-flow-col auto-cols-fr gap-3">
             <div class="bg-white rounded-lg py-1 px-2 shadow-md">
                 <p class="text-sm sm:text-xs text-sky-900">Kandidat:</p>
-                <h1 class="text-teal-600 my-1 text-lg font-bold">3</h1>
+                <h1 class="text-teal-600 my-1 text-lg font-bold"><%=kandidat.total%></h1>
             </div>
             <div class="bg-white rounded-lg py-1 px-2 shadow-md">
                 <p class="whitespace-nowrap text-sm sm:text-xs text-sky-900 overflow-hidden">Pemilih Terdaftar:</p>
@@ -21,47 +21,22 @@
             </div>
         </div>
 
-        <div class="p-3 bg-white mt-3 rounded-md h-90 mb-3 shadow shadow-md/5">
+        <div class="p-3 bg-white rounded-md h-90 mb-3 shadow shadow-md/5">
             <canvas id="grafik-polling"></canvas>
         </div>
 
         <!-- candidate scroll -->
-        <div class="w-full bg-white rounded-md shadow shadow-md/5 px-3 pt-3">
-            <div
-                class="pb-3 overflow-x-auto flex gap-3 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
-                <!-- cards -->
-                <div
-                    class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
-                    <img class="w-full h-[150px] object-cover border-0" src="/img/1.jpg" alt="">
-                    <div class="py-3 text-center">
-                        <h1 class="text-sm font-bold text-neutral-700">Edot The Dear</h1>
-                        <p class="text-xs">Kelas Cing</p>
+        <div   class="w-full bg-white rounded-md shadow-md px-3 pt-3">
+            <div id="gallery" class="pb-3 overflow-x-auto flex gap-3 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:h-[5px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <% for (let id in kandidat) { %>
+                    <div class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
+                        <img class="w-full h-[150px] object-cover border-0" src="/img/kandidat 1.jpg" alt="">
+                        <div class="py-3 text-center">
+                            <h1 class="text-sm font-bold text-neutral-700"><%=kandidat[id].nama%></h1>
+                            <p class="text-xs"><%= kandidat[id].kelas %></p>
+                        </div>
                     </div>
-                </div>
-                <div
-                    class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
-                    <img class="w-full h-[150px] object-cover border-0" src="/img/2.jpg" alt="">
-                    <div class="py-3 text-center">
-                        <h1 class="text-sm font-bold text-neutral-700">Najrul Anomali</h1>
-                        <p class="text-xs">Kelas WKWKWK</p>
-                    </div>
-                </div>
-                <div
-                    class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
-                    <img class="w-full h-[150px] object-cover border-0" src="/img/3.jpg" alt="">
-                    <div class="py-3 text-center">
-                        <h1 class="text-sm font-bold text-neutral-700">Usup</h1>
-                        <p class="text-xs">Kelas Malam</p>
-                    </div>
-                </div>
-                <div
-                    class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
-                    <img class="w-full h-[150px] object-cover border-0" src="/img/4.jpg" alt="">
-                    <div class="py-3 text-center">
-                        <h1 class="text-sm font-bold text-neutral-700">Sleeping Bag</h1>
-                        <p class="text-xs">Kelas DPR</p>
-                    </div>
-                </div>
+                <% } %>
             </div>
         </div>
 
@@ -133,12 +108,12 @@
                 </div>
             </div>
 
-        <div class="bg-white rounded-md mb-3 h-60 p-3 shadow shadow-md/5">
+        <div class="bg-white rounded-md mb-3 h-60 p-3">
             <canvas id="grafik-tps"></canvas>
         </div>
 
 
-        <div class="flex-1 p-3 text-neutral-600 w-full bg-white rounded-md shadow shadow-md/5">
+        <div class=" p-3 text-neutral-600 w-full bg-white rounded-md shadow shadow-md/5">
             <h1 class="mb-3">Log Aktivitas</h1>
             <div class="w-full h-45 bg-neutral-200 px-2 py-1 overflow-y-auto text-sm">
                 <p>[2025:11:11 22:30] TPS 1 VOTED</p>
@@ -156,20 +131,19 @@
 
 <script>
     function $id(id) { return document.getElementById(id); }
-    
+
     if(window.grafikPolling || window.grafikTps){
         window.grafikPolling.destroy();
         window.grafikTps.destroy();
     }
-
     window.grafikPolling = new Chart($id("grafik-polling"), {
         type: "bar",
         data: {
-            labels: ["A", "B", "C", "D", "E"],
+            labels: [],
             datasets: [
                 {
                     label: "Grafik Polling",
-                    data: [250, 304, 255, 105, 112],
+                    data: [],
                     // backgroundColor: "#3B82F6", // biru elegan
                     // borderColor: "#2563EB",     // biru lebih tua buat aksen
                     borderWidth: 1,
@@ -259,7 +233,14 @@
         }
     });
 
-    
+    socket.on("polling-update", (datas) => {
+        console.log(datas);
+        window.grafikPolling.data.labels = datas.lables;
+        window.grafikPolling.data.datasets[0].data = datas.data;
+        window.grafikPolling.update();
+    });
+
+
 
     window.addEventListener("load", () => {
         window.grafikPolling.reset();
