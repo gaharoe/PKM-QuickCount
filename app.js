@@ -23,17 +23,6 @@ const io = new Server(server, {
     }
 });
 
-// vars ----------------------
-db.ref("kandidat").on("value", (snapshot) => {
-    let kandidat = snapshot.val();
-    let lables = Object.keys(kandidat);
-    let data = Object.values(kandidat).map(item => item.suara); 
-    io.emit("dashboard-polling-update", {lables, data});
-});
-
-db.ref("TPS").on("value", (snapshot) => {});
-
-// db.ref()
 async function renameKey(path, oldKey, newKey) {
     const ref = db.ref(path);
     const snapshot = await ref.child(oldKey).once("value");
@@ -47,17 +36,35 @@ async function renameKey(path, oldKey, newKey) {
 
 
 io.on("connection", async (socket) => {
-    const endpoint = socket.handshake.headers.referer.split("/");
-    if(endpoint[3] == "dashboard"){
-        db.ref("kandidat").once("value", (snapshot) => {
-            let kandidat = snapshot.val();
-            let lables = Object.keys(kandidat);
-            let data = Object.values(kandidat).map(item => item.suara); 
-            socket.emit("admin-polling-update", {lables: lables, data:data});
+
+    socket.on("admin-dashboard-request-charts", () => {
+        db.ref("kandidat").on("value", (snapshot) => {
+            socket.emit("admin-polling-update", {
+                lables: Object.keys(snapshot.val()), 
+                data: Object.values(snapshot.val()).map(item => item.suara)
+            });
             // console.log("success");
-            // io.emit("polling-update", {lables, data});
         });
-    }
+        db.ref("TPS").on("value", (snapshot) => {
+            socket.emit("admin-tps-update", {
+                labels: Object.keys(snapshot.val()), 
+                data: Object.values(snapshot.val()).map(item => item.suara),
+                status: Object.values(snapshot.val()).map(item => item.status)
+            })
+        });
+    });
+
+    socket.on("admin-candidate-request-candidate", () => {
+        db.ref("kandidat").on("value", (snapshot) => {
+            socket.emit("admin-candidate-update-candidate", {...snapshot.val()});
+        });
+    });
+
+    socket.on("admin-tps-request-tps", () => {
+        db.ref("TPS").on("value", (snapshot) => {
+            socket.emit("admin-tps-update-tps", {...snapshot.val()});
+        });
+    });
 });
 
 
@@ -74,12 +81,12 @@ function isFetch(req) {return req.headers["x-requested-with"] === "XMLHttpReques
 app.get("/admin/dashboard", async (req, res) => {
     const dataKandidat = await db.ref("kandidat").once("value");
     const kandidat = dataKandidat.val(); 
-    kandidat.total = dataKandidat.numChildren();
     res.render("pages/dashboard", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Dashboard - Smansekata Vote",
         page: "Dashboard",
-        kandidat
+        kandidat,
+        totalKandidat: dataKandidat.numChildren()
     });
 });
 app.get("/admin/candidate", (req, res) => {
@@ -110,11 +117,11 @@ app.get("/admin/reports", (req, res) => {
         page: "Hasil dan Laporan"
     });
 });
-app.get("/admin/log", (req, res) => {
-    res.render("pages/log", {
+app.get("/admin/voter", (req, res) => {
+    res.render("pages/voter", {
         layout: isFetch(req) ? false : "layouts/mainLayout",
-        title: "Log Aktivitas - Smansekata Vote",
-        page: "Log Aktivitas"
+        title: "Manajemen Pemilih - Smansekata Vote",
+        page: "Manajemen Pemilih"
     });
 });
 

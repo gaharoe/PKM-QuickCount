@@ -5,7 +5,7 @@
         <div class="mb-3 grid grid-flow-col auto-cols-fr gap-3">
             <div class="bg-white rounded-lg py-1 px-2 shadow-md">
                 <p class="text-sm sm:text-xs text-sky-900">Kandidat:</p>
-                <h1 class="text-teal-600 my-1 text-lg font-bold"><%=kandidat.total%></h1>
+                <h1 class="text-teal-600 my-1 text-lg font-bold"><%=totalKandidat%></h1>
             </div>
             <div class="bg-white rounded-lg py-1 px-2 shadow-md">
                 <p class="whitespace-nowrap text-sm sm:text-xs text-sky-900 overflow-hidden">Pemilih Terdaftar:</p>
@@ -30,7 +30,7 @@
             <div id="gallery" class="pb-3 overflow-x-auto flex gap-3 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:h-[5px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                 <% for (let id in kandidat) { %>
                     <div class="min-w-[160px] w-[160px] bg-neutral-50 border border-neutral-300 rounded-md flex flex-col overflow-hidden items-center snap-start">
-                        <img class="w-full h-[150px] object-cover border-0" src="/img/kandidat 1.jpg" alt="">
+                        <img class="w-full h-[150px] object-cover border-0" src="<%= kandidat[id].foto %>" alt="">
                         <div class="py-3 text-center">
                             <h1 class="text-sm font-bold text-neutral-700"><%=kandidat[id].nama%></h1>
                             <p class="text-xs"><%= kandidat[id].kelas %></p>
@@ -46,63 +46,15 @@
 
     <!-- Bagian kanan -->
     <div class="min-w-0 flex flex-col">
-        <div id="table-tps" class="p-3 w-full bg-white rounded-lg shadow-md mb-3">
+        <div  class="p-3 w-full bg-white rounded-lg shadow-md mb-3">
             <h1 class="text-center text-neutral-600 mb-3">TPS Terdaftar</h1>
-            <div class="max-h-30 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-50 dark:[&::-webkit-scrollbar-track]:bg-neutral-100 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-200">
-                <table class="w-full text-xs rounded-md overflow-hidden">
+            <div class="max-h-30 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-track]:bg-neutral-100 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-300">
+                <table class="w-full text-xs rounded-md overflow-hidden" id="table-tps">
                     <tr class="bg-sky-900 text-neutral-200 h-6">
                         <td width="40" class="text-center">#</td>
                         <td>Nama</td>
                         <td width="50">Suara</td>
                         <td width="100">Status</td>
-                    </tr>
-                    <tr class="h-6 bg-slate-200">
-                        <td class="text-center">1</td>
-                        <td>TPS 1</td>
-                        <td>200</td>
-                        <td>
-                            <span
-                                class="bg-emerald-500 flex w-fit items-center gap-2 text-white pl-3 pr-5 py-[1px] rounded-full">
-                                <div class="w-1 h-1 bg-white rounded-full"></div>
-                                online
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="h-6 bg-slate-300">
-                        <td class="text-center">2</td>
-                        <td>TPS 2</td>
-                        <td>200</td>
-                        <td>
-                            <span
-                                class="bg-red-600 flex w-fit items-center gap-2 text-white pl-3 pr-5 py-[1px] rounded-full">
-                                <div class="w-1 h-1 bg-white rounded-full"></div>
-                                offline
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="h-6 bg-slate-200">
-                        <td class="text-center">3</td>
-                        <td>TPS 3</td>
-                        <td>200</td>
-                        <td>
-                            <span
-                                class="bg-emerald-500 flex w-fit items-center gap-2 text-white pl-3 pr-5 py-[1px] rounded-full">
-                                <div class="w-1 h-1 bg-white rounded-full"></div>
-                                online
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="h-6 bg-slate-300">
-                        <td class="text-center">4</td>
-                        <td>TPS 4</td>
-                        <td>200</td>
-                        <td>
-                            <span
-                                class="bg-yellow-500 flex w-fit items-center gap-2 text-white pl-3 pr-5 py-[1px] rounded-full">
-                                <div class="w-1 h-1 bg-white rounded-full"></div>
-                                pending
-                            </span>
-                        </td>
                     </tr>
                 </table>
                 </div>
@@ -113,192 +65,25 @@
         </div>
 
 
-        <div class=" p-3 text-neutral-600 w-full bg-white rounded-md shadow shadow-md/5">
+        <div class="flex flex-col p-3 text-neutral-600 w-full bg-white rounded-md shadow shadow-md/5 flex-1">
             <h1 class="mb-3">Log Aktivitas</h1>
-            <div class="w-full h-45 bg-neutral-200 px-2 py-1 overflow-y-auto text-sm">
-                <p>[2025:11:11 22:30] TPS 1 VOTED</p>
-                <p>[2025:11:11 22:30] TPS 2 VOTED</p>
-                <p>[2025:11:11 22:31] TPS 1 VOTED</p>
-                <p>[2025:11:11 22:31] TPS 4 VOTED</p>
-                <p>[2025:11:11 22:32] TPS 3 VOTED</p>
-                <p>[2025:11:11 22:33] TPS 2 VOTED</p>
-                <p>[2025:11:11 22:33] TPS 1 VOTED</p>
-                <p>[2025:11:11 22:33] TPS 2 VOTED</p>
+            <div class="text-neutral-100 w-full h-45 bg-slate-700 px-2 py-1 overflow-y-auto text-sm flex-1" >
+                <div class="flex w-full">
+                    <p class="w-30">2025:11:11 22:30</p>
+                    <p>TPS 1 VOTED</p>
+                </div>
+                <div class="flex w-full">
+                    <p class="w-30">2025:11:11 22:31</p>
+                    <p>TPS 1 VOTED</p>
+                </div>
+                <div class="flex w-full">
+                    <p class="w-30">2025:11:11 22:30</p>
+                    <p>TPS 1 VOTED</p>
+                </div>
             </div>
         </div>
     </div>
+    <script>
+        loadDashboardCharts();
+    </script>
 </div>
-
-<script>
-    function $id(id) { return document.getElementById(id); }
-
-    if(window.grafikPolling || window.grafikTps){
-        window.grafikPolling.destroy();
-        window.grafikTps.destroy();
-    }
-    window.grafikPolling = new Chart($id("grafik-polling"), {
-        type: "bar",
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: "Grafik Polling",
-                    data: [],
-                    // backgroundColor: "#3B82F6", // biru elegan
-                    // borderColor: "#2563EB",     // biru lebih tua buat aksen
-                    borderWidth: 1,
-                    borderRadius: 6,            // sedikit rounded biar halus
-                    hoverBackgroundColor: "#60A5FA", // biru muda saat hover
-                }
-            ]
-        },
-        options: {
-            // responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: "Grafik Polling Suara",
-                    color: "#1E293B",
-                    font: { size: 18, weight: "bold" },
-                    padding: { top: 10, bottom: 20 }
-                },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: "#1E293B",
-                    titleColor: "#E2E8F0",
-                    bodyColor: "#E2E8F0",
-                    padding: 10
-                }
-            },
-            scales: {
-                x: {
-                    ticks: { color: "#334155", font: { size: 13 } },
-                    grid: { color: "#E2E8F0" }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: { color: "#334155", font: { size: 13 } },
-                    grid: { color: "#E2E8F0" }
-                }
-            },
-            animation: {
-                duration: 1500,
-                easing: "easeOutBounce" // efek mantul pas muncul
-            }
-        }
-    });
-
-    window.grafikTps = new Chart(ctx = $id("grafik-tps"), {
-        type: "bar",
-        data: {
-            labels: ["TPS 1", "TPS 2", "TPS 3", "TPS 4"],
-            datasets: [
-                {
-                    label: "Grafik TPS",
-                    data: [250, 304, 255, 112],
-                    borderWidth: 1,
-                    hoverOffset: 12,
-                    borderRadius: 50
-                }
-            ]
-        },
-        options: {
-            indexAxis: "y",
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: false,
-                    text: "Grafik TPS",
-                    color: "#1E293B",
-                    font: { size: 1, weight: "medium" },
-                    // padding: { top: 10, bottom: 20 }
-                },
-                legends: {
-                    display: true,
-                    position: "left"
-                },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: "#1E293B",
-                    titleColor: "#E2E8F0",
-                    bodyColor: "#E2E8F0",
-                    padding: 10
-                }
-            },
-            animation: {
-                duration: 1500,
-                // easing: "easeIn" // efek mantul pas muncul
-            }
-        }
-    });
-
-    socket.on("polling-update", (datas) => {
-        console.log(datas);
-        window.grafikPolling.data.labels = datas.lables;
-        window.grafikPolling.data.datasets[0].data = datas.data;
-        window.grafikPolling.update();
-    });
-
-
-
-    window.addEventListener("load", () => {
-        window.grafikPolling.reset();
-        window.grafikPolling.update();
-        window.grafikTps.reset();
-        window.grafikTps.update();
-    });
-
-    // new Chart($id("grafik-tps"), {
-    //     type: "pie",
-    //     data: {
-    //         labels: ["TPS 1", "TPS 2", "TPS 3", "TPS 4"],
-    //         datasets: [{
-    //             label: "Grafik TPS",
-    //             data: [45, 25, 15, 10],
-    //             backgroundColor: [
-    //                 "#02b2c2", // biru pastel muda
-    //                 "#FFE6A7", // kuning pastel
-    //                 "#B7E4C7", // hijau mint lembut
-    //                 "#CDB4DB"  // ungu pastel
-    //             ],
-    //             borderColor: "#FFFFFF",
-    //             borderWidth: 3,
-    //             hoverOffset: 12
-    //         }]
-    //     },
-    //     options: {
-    //         // responsive: true,
-    //         maintainAspectRatio: false,
-    //         plugins: {
-    //             legend: {
-    //                 position: "right",
-    //                 labels: {
-    //                     color: "#334155",
-    //                     font: { size: 11, weight: "200" },
-    //                     padding: 5
-    //                 }
-    //             },
-    //             title: {
-    //                 display: true,
-    //                 text: "TPS",
-    //                 color: "#334155",
-    //                 font: { size: 18, weight: "200" },
-    //                 padding: { top: 10, bottom: 20 }
-    //             },
-    //             tooltip: {
-    //                 enabled: true,
-    //                 backgroundColor: "#475569",
-    //                 titleColor: "#F1F5F9",
-    //                 bodyColor: "#F1F5F9",
-    //                 padding: 10
-    //             }
-    //         },
-    //         animation: {
-    //             animateScale: true,
-    //             animateRotate: true,
-    //             duration: 1200
-    //         }
-    //     }
-    // });
-</script>
