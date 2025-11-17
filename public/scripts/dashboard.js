@@ -1,5 +1,4 @@
 function $id(id) { return document.getElementById(id); }
-
 const tpsColors = ["rgba(220, 38, 38, 0.6)", "rgba(16, 185, 129, 0.6)", "rgba(255, 197, 89,0.6)"];
 
 function loadDashboardCharts() {
@@ -7,8 +6,6 @@ function loadDashboardCharts() {
         window.grafikPolling.destroy();
         window.grafikTps.destroy();
     }
-
-    socket.emit("admin-dashboard-request-charts");
 
     window.grafikPolling = new Chart($id("grafik-polling"), {
         type: "bar",
@@ -106,6 +103,18 @@ function loadDashboardCharts() {
         }
     });
 
+    $id("table-tps").innerHTML = `
+        <tr class="bg-sky-900 text-neutral-200 h-6">
+            <td width="40" class="text-center">#</td>
+            <td>Nama</td>
+            <td width="50">Suara</td>
+            <td width="100">Status</td>
+        </tr>
+    `;
+
+    socket.emit("admin-dashboard-request-charts");
+    socket.off("admin-polling-update");
+    socket.off("admin-tps-update");
     socket.on("admin-polling-update", (datas) => {
         window.grafikPolling.data.labels = datas.lables;
         window.grafikPolling.update();

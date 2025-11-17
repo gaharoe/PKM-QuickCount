@@ -1,10 +1,11 @@
 const express = require("express");
-const cors = require("cors");
 const http = require("http");
 const {Server} = require("socket.io");
 const db = require("./utils/firebase-RTDB.js");
 const ejsLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
+
+// develompment lib
 const WebSocket = require("ws");
 const chokidar = require("chokidar");
 
@@ -43,7 +44,6 @@ io.on("connection", async (socket) => {
                 lables: Object.keys(snapshot.val()), 
                 data: Object.values(snapshot.val()).map(item => item.suara)
             });
-            // console.log("success");
         });
         db.ref("TPS").on("value", (snapshot) => {
             socket.emit("admin-tps-update", {

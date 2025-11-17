@@ -13,13 +13,13 @@ $("#nav-btns").click(function (e) {
         let page = endpoint.split("/")[2];
         page = page.charAt(0).toUpperCase() + page.slice(1);
         let state = {page}
-        history.pushState(state, page, endpoint);
         $("#position").text(page);
         $.ajax({
             type: "GET",
             url: endpoint,
             success: function (response) {
                 $("#content").html(response);
+                history.pushState(state, page, endpoint);
             }
         });
     }
