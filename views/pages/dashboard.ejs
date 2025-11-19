@@ -50,11 +50,19 @@
             <h1 class="text-center text-neutral-600 mb-3">TPS Terdaftar</h1>
             <div class="max-h-30 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-200 dark:[&::-webkit-scrollbar-track]:bg-neutral-100 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-300">
                 <table class="w-full text-xs rounded-md overflow-hidden" id="table-tps">
+                    <tr class="bg-sky-900 text-neutral-200 h-6">
+                        <td width="40" class="text-center">#</td>
+                        <td>Nama</td>
+                        <td width="50">Suara</td>
+                        <td width="100">Status</td>
+                    </tr>
 
+                    <tr class="bg-slate-200 text-center h-15">
+                        <td colspan="4">Tidak ada TPS terdaftar</td>
+                    </tr>
                 </table>
-                </div>
             </div>
-
+        </div>
         <div class="bg-white rounded-md mb-3 h-60 p-3">
             <canvas id="grafik-tps"></canvas>
         </div>

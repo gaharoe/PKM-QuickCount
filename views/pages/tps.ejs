@@ -1,78 +1,45 @@
-<div id="tps-cards" class="p-3 flex gap-2 overflow-x-auto max-w-full bg-white rounded-sm shadow-md/5">
-    <div class="p-2 w-fit bg-white rounded-sm shadow-md/15">
-        <div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div>
-        <div class="w-20 h-20 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="45px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
-            </svg>
-            <p>TPS 1</p>
+<div class="pb-3 grid grid-cols-1 gap-3 w-full">
+    <div class="min-w-0 overflow-hidden flex flex-col">
+        <div class="w-full rounded-md overflow-hidden">
+            <!-- gallery -->
+            <div id="tps-cards" class="pb-3 overflow-x-auto flex gap-3 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <!-- image looping by script -->
+                 <div class="p-2 bg-white rounded-sm shadow-md/15 w-[250px] min-w-[240px]">
+                    <div class="flex items-center p-0 text-xs text-neutral-700"><div class="w-2 h-2 bg-green-500 mr-2 rounded-full"></div> online</div>
+                    <div class="w-60 h-56 flex flex-col justify-center items-center text-lg text-neutral-600">
+                        <svg width="45px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
+                        </svg>
+                        <p>TPS 1</p>
+                    </div>
+                    <div>
+                        <label class="switch relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" data-id="TPS-1">
+                            <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors"></div>
+                            <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7 shadow"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="p-2 w-fit bg-white rounded-sm shadow-md/15">
-        <div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div>
-        <div class="w-20 h-20 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="45px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
-            </svg>
-            <p>TPS 1</p>
+    <div class="w-full bg-white rounded-md p-3 overflow-x-auto">
+        <button class="bg-blue-500 mb-3 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md border-b-4 border-blue-800 text-xs">+ Tambah</button>
+        <div class="  w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full">
+            <table id="candidate-table" class="min-w-[400px] w-full text-xs rounded-md overflow-hidden">
+                <tr class="bg-sky-900 text-neutral-200 h-6">
+                    <td width="40" height="35" class="text-center">#</td>
+                    <td>TPS ID</td>
+                    <td width="150">Perolehan Suara</td>
+                    <td width="100">Status</td>
+                </tr>
+                <!-- table looping by script -->
+                <tr class="bg-slate-200 h-15 text-center">
+                    <td colspan="4">Tidak ada TPS tersedia</td>
+                </tr>
+            </table>
         </div>
     </div>
-    
-    <div class="p-2 w-fit bg-white rounded-sm shadow-md/15">
-        <div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div>
-        <div class="w-20 h-20 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="45px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
-            </svg>
-            <p>TPS 1</p>
-        </div>
-    </div>
-    
-    <div class="p-2 w-fit bg-neutral-200 outline outline-dashed outline-neutral-300 rounded-sm flex items-center">
-        <div class="w-20 h-20 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 12H20M12 4V20" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-    </div>
-<!-- 
-    <div class="p-2 w-fit bg-white rounded-sm">
-        <div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div>
-        <div class="w-35 h-30 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="50px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
-            </svg>
-            <p>TPS 2</p>
-        </div>
-        <div class="flex gap-2">
-            <button class="rounded-sm h-7 w-7 bg-amber-500"></button>
-            <button class="rounded-sm flex-1 h-7 w-7 bg-teal-500"></button>
-            <button class="rounded-sm h-7 w-7 bg-red-500"></button>
-        </div>
-    </div>
-
-    <div class="p-2 w-fit bg-white rounded-sm">
-        <div><div class="w-2 h-2 bg-green-500 rounded-full"></div></div>
-        <div class="w-35 h-30 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="50px" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.6876 16.2809L24.7119 16.3503L24.7379 16.4638L24.7479 16.5748V23.9063C24.7479 24.3334 24.4304 24.6865 24.0186 24.7424L23.9041 24.75H3.09375C2.66659 24.75 2.31357 24.4325 2.25771 24.0208L2.25 23.9063V16.5944L2.25207 16.5349L2.2643 16.4387C2.27571 16.3782 2.29321 16.3206 2.31631 16.2661L5.42052 9.49505C5.54082 9.23266 5.78526 9.05269 6.06547 9.01179L6.1875 9.00294L9.0448 9.00207L8.15725 10.5436L8.08067 10.6896L6.72862 10.6898L4.40775 15.7498H22.5787L20.2982 10.8606L21.2683 9.17611C21.3433 9.23333 21.4089 9.30328 21.4617 9.38375L21.5209 9.48999L24.6876 16.2809ZM15.0359 2.31262L15.1387 2.36321L20.9753 5.74173C21.3445 5.95544 21.4912 6.40713 21.3341 6.79195L21.2835 6.89503L18.126 12.3761L19.4062 12.3768C19.8722 12.3768 20.25 12.7546 20.25 13.2206C20.25 13.6477 19.9325 14.0008 19.5208 14.0567L19.4062 14.0643L17.154 14.0636L17.153 14.067H12.5652L12.5618 14.0636L7.59375 14.0643C7.12776 14.0643 6.75 13.6865 6.75 13.2206C6.75 12.7934 7.06742 12.4404 7.47926 12.3846L7.59375 12.3768L9.64462 12.3761L9.44038 12.2584C9.07118 12.0446 8.92446 11.5929 9.08168 11.2081L9.13215 11.105L13.9884 2.67229C14.2014 2.30214 14.652 2.15503 15.0359 2.31262ZM15.0254 4.24722L11.0113 11.2176L13.0117 12.3761H16.1809L19.404 6.78172L15.0254 4.24722Z" fill="#505050"/>
-            </svg>
-            <p>TPS 3</p>
-        </div>
-        <div class="flex gap-2">
-            <button class="rounded-sm h-7 w-7 bg-amber-500"></button>
-            <button class="rounded-sm flex-1 h-7 w-7 bg-teal-500"></button>
-            <button class="rounded-sm h-7 w-7 bg-red-500"></button>
-        </div>
-    </div>
-
-    <div class="scale-90 hover:scale-100 transition-all p-1.5 w-fit bg-neutral-300 rounded-sm flex justify-center items-center outline outline-dashed outline-slate-400">
-        <div class="w-35 h-30 flex flex-col justify-center items-center text-lg text-neutral-600">
-            <svg width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 12H20M12 4V20" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-    </div> -->
-
+    <script>tpsRequestData()</script>
 </div>

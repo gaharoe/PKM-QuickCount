@@ -1,5 +1,5 @@
 function $id(id) { return document.getElementById(id); }
-const tpsColors = ["rgba(220, 38, 38, 0.6)", "rgba(16, 185, 129, 0.6)", "rgba(255, 197, 89,0.6)"];
+const tpsColors = ["rgba(0, 0, 0, 0.1)", "rgba(16, 185, 129, 0.6)"];
 
 function loadDashboardCharts() {
     if(window.grafikPolling || window.grafikTps){
@@ -103,14 +103,7 @@ function loadDashboardCharts() {
         }
     });
 
-    $id("table-tps").innerHTML = `
-        <tr class="bg-sky-900 text-neutral-200 h-6">
-            <td width="40" class="text-center">#</td>
-            <td>Nama</td>
-            <td width="50">Suara</td>
-            <td width="100">Status</td>
-        </tr>
-    `;
+
 
     socket.emit("admin-dashboard-request-charts");
     socket.off("admin-polling-update");
@@ -125,6 +118,14 @@ function loadDashboardCharts() {
     });
 
     socket.on("admin-tps-update", (datas) => {
+        $id("table-tps").innerHTML = `
+            <tr class="bg-sky-900 text-neutral-200 h-6">
+                <td width="40" class="text-center">#</td>
+                <td>Nama</td>
+                <td width="70">Suara</td>
+                <td width="100">Status</td>
+            </tr>
+        `;
         datas.labels.forEach((label, index) => {
             let status = datas.status[index]==0 ? ["offline", "bg-red-600"] : 
                 datas.status[index]==1 ? ["online", "bg-emerald-500"] : 

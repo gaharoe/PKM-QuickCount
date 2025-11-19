@@ -3,19 +3,29 @@ function candidateRequestData(){
     socket.emit("admin-candidate-request-candidate");
     socket.off("admin-candidate-update-candidate");
     socket.on("admin-candidate-update-candidate", (candidates) => {
-        console.log(candidates)
+        $id("candidate-table").innerHTML = `
+            <tr class="bg-sky-900 text-neutral-200 h-6">
+                <td width="40" height="35" class="text-center">#</td>
+                <td>Nama Kandidat</td>
+                <td>Kelas</td>
+                <td>Visi</td>
+                <td>Misi</td>
+                <td>Aksi</td>
+            </tr>
+        `;
+        $id("candidate-gallery").innerHTML = "";
         let index = 0;
         for(id in candidates){
-            // let galery = document.createElement("div");
-            // galery.className = "min-w-[250px] max-w-[250px] p-3 bg-neutral-50 flex flex-col overflow-hidden snap-start";
-            // galery.innerHTML = `
-            //     <img class="w-full h-[220px] object-cover" src="${candidates[id].foto}" alt="">
-            //     <div class="mt-2">
-            //         <p class="mb-3 text-[11px] bg-emerald-600 w-fit rounded-full px-2 text-white">${id}</p>
-            //         <h1 class="font-bold text-neutral-700">${candidates[id].nama}</h1>
-            //         <p class="text-xs">${candidates[id].kelas}</p>
-            //     </div>
-            // `;
+            let galery = document.createElement("div");
+            galery.className = "min-w-[250px] max-w-[250px] p-3 bg-neutral-50 flex flex-col overflow-hidden snap-start";
+            galery.innerHTML = `
+                <img class="w-full h-[220px] object-cover" src="${candidates[id].foto}" alt="">
+                <div class="mt-2">
+                    <p class="mb-3 text-[11px] bg-emerald-600 w-fit rounded-full px-2 text-white">${id}</p>
+                    <h1 class="font-bold text-neutral-700">${candidates[id].nama}</h1>
+                    <p class="text-xs">${candidates[id].kelas}</p>
+                </div>
+            `;
 
             let table = document.createElement("tr");
             table.className = `h-6 bg-slate-${index%2==0?"200":"100"}`;
@@ -48,6 +58,7 @@ function candidateRequestData(){
                     </button>
                 </td>
             `;
+      
             $id("candidate-gallery").appendChild(galery);
             $id("candidate-table").appendChild(table);
         }

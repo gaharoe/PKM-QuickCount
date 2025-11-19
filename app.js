@@ -40,31 +40,45 @@ io.on("connection", async (socket) => {
 
     socket.on("admin-dashboard-request-charts", () => {
         db.ref("kandidat").on("value", (snapshot) => {
-            socket.emit("admin-polling-update", {
-                lables: Object.keys(snapshot.val()), 
-                data: Object.values(snapshot.val()).map(item => item.suara)
-            });
+            if(!!snapshot.val()){
+                socket.emit("admin-polling-update", {
+                    lables: Object.keys(snapshot.val()), 
+                    data: Object.values(snapshot.val()).map(item => item.suara)
+                });
+            }
         });
         db.ref("TPS").on("value", (snapshot) => {
-            socket.emit("admin-tps-update", {
-                labels: Object.keys(snapshot.val()), 
-                data: Object.values(snapshot.val()).map(item => item.suara),
-                status: Object.values(snapshot.val()).map(item => item.status)
-            })
+            if(!!snapshot.val()){
+                socket.emit("admin-tps-update", {
+                    labels: Object.keys(snapshot.val()), 
+                    data: Object.values(snapshot.val()).map(item => item.suara),
+                    status: Object.values(snapshot.val()).map(item => item.status)
+                });
+            }
         });
     });
 
     socket.on("admin-candidate-request-candidate", () => {
         db.ref("kandidat").on("value", (snapshot) => {
-            socket.emit("admin-candidate-update-candidate", {...snapshot.val()});
+            if(!!snapshot.val()){
+                socket.emit("admin-candidate-update-candidate", {...snapshot.val()});
+            }
         });
     });
 
     socket.on("admin-tps-request-tps", () => {
         db.ref("TPS").on("value", (snapshot) => {
-            socket.emit("admin-tps-update-tps", {...snapshot.val()});
+            if(!!snapshot.val()){
+                socket.emit("admin-tps-update-tps", {...snapshot.val()});
+            }
         });
     });
+
+    socket.on("admin-tps-send-status", (tps) => {
+        if(tps.id){
+            db.ref(`TPS/${tps.id}`).update({status: tps.status});
+        }
+    })
 });
 
 
@@ -122,6 +136,14 @@ app.get("/admin/voter", (req, res) => {
         layout: isFetch(req) ? false : "layouts/mainLayout",
         title: "Manajemen Pemilih - Smansekata Vote",
         page: "Manajemen Pemilih"
+    });
+});
+
+app.get("/admin/add-candidate", (req, res) => {
+    res.render("pages/attachment/addCandidate", {
+        layout: isFetch(req) ? false : "layouts/mainLayout",
+        title: "Tambah Kandidat - Smansekata Vote",
+        page: "Tambah Kandidat"
     });
 });
 
