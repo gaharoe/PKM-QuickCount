@@ -63,4 +63,9 @@ function candidateRequestData(){
             $id("candidate-table").appendChild(table);
         }
         
-    });}
+    });
+
+    $id("add-candidate").addEventListener("click", (e) =>{
+        window.location.href = "/admin/add-candidate";
+    });
+}

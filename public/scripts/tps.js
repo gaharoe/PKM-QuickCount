@@ -1,4 +1,5 @@
 function tpsRequestData(){
+    let lastTps = "";
     socket.off("admin-tps-update-tps")
     socket.emit("admin-tps-request-tps");
     socket.on("admin-tps-update-tps", (tps) => {
@@ -14,6 +15,7 @@ function tpsRequestData(){
         `;
         $id("tps-cards").innerHTML = "";
         for(id in tps) {
+            lastTps = `TPS-${parseInt(id.split("-")[1])+1}`;
             let status = !tps[id].status ? {color: "bg-red-600", name: "offline", checked: ""} : {color: "bg-emerald-500", name:"online", checked: "checked"};
             let card = document.createElement("div");
             let table = document.createElement("tr");
@@ -31,11 +33,11 @@ function tpsRequestData(){
                 </div>
                 <div class="flex items-center">
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer switch" data-id="${id}" ${status.checked}>
+                        <input type="checkbox" class="switch sr-only peer" data-id="${id}" ${status.checked}>
                         <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors"></div>
                         <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7 shadow"></div>
                     </label>
-                    <button class="inline-flex items-center justify-center rounded-sm w-7 h-7 ml-2 cursor-pointer">
+                    <button data-id="${id}" class="deleteTps inline-flex items-center justify-center rounded-sm w-7 h-7 ml-2 cursor-pointer">
                         <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M14 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -60,25 +62,53 @@ function tpsRequestData(){
         }
             
     });
+    $id("tps-cards").addEventListener("click", (e) => {
+        const tpsID = e.target.closest(".deleteTps").dataset.id;
+        Swal.fire({
+            icon: "question",
+            text: `Hapus ${tpsID}?`,
+            showCancelButton: true,
+        }).then(result => {
+            result.value ?
+                socket.emit("admin-tps-delete-tps", tpsID) : 0;
+        });
+    });
     $id("tps-cards").addEventListener("change", (e) => {
+        e.preventDefault();
         let sw = e.target.closest(".switch");
-        let tpsID = sw.dataset.id
+        let tpsID = sw.dataset.id;
         if(sw){
             sw.checked ? 
                 Swal.fire({
-                    title: `Nyalakan ${tpsID}?`,
                     icon: "question",
-                    confirmButtonText: "ya",
-                    cancelButtonText: "batal",
-                    showCancelButton: true,
-                    showCloseButton: true,
-                }) ?
-                    socket.emit("admin-tps-send-status", {id: tpsID, status: 1}) :
-                    sw.checked = false
+                    text: `Nyalakan ${tpsID}?`,
+                    showCancelButton: true
+                }).then(result => {
+                    result.value ?
+                        socket.emit("admin-tps-send-status", {id: tpsID, status: 1}) :
+                        sw.checked = false
+                })
                 :
-                confirm(`matikan ${tpsID}?`) ?
-                    socket.emit("admin-tps-send-status", {id: tpsID, status: 0}) :
-                    sw.checked = true;
+                Swal.fire({
+                    icon: "question",
+                    text: `Matikan ${tpsID}?`,
+                    showCancelButton: true
+                }).then(result => {
+                    result.value ?
+                        socket.emit("admin-tps-send-status", {id: tpsID, status: 0}) :
+                        sw.checked = true;
+                });
         }
+    });
+
+    $id("add-tps").addEventListener("click", (e) => {
+        Swal.fire({
+            icon: "question",
+            text: `Tambahkan ${lastTps}?`,
+            showCancelButton: true,
+        }).then(result => {
+            result.value ?
+                socket.emit("admin-tps-add-tps", lastTps) : 0;
+        });
     });
 }

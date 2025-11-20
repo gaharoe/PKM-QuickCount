@@ -4,10 +4,13 @@ const {Server} = require("socket.io");
 const db = require("./utils/firebase-RTDB.js");
 const ejsLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
+const multer = require("multer");
+const path = require("path");
 
 // develompment lib
 const WebSocket = require("ws");
 const chokidar = require("chokidar");
+// -----------------------------------
 
 const app = express();
 
@@ -15,13 +18,23 @@ app.set('view engine', 'ejs');
 app.use(ejsLayout);
 app.use(cookieParser());
 app.use(express.static(__dirname+"/public"));
-const server = http.createServer(app);
 
+const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 const io = new Server(server, {
     cors: {
         origin: "*"
     }
+});
+
+const upload = multer({storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, "temp/");
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now()+path.extname(file.originalname));
+        }
+    }) 
 });
 
 async function renameKey(path, oldKey, newKey) {
@@ -33,6 +46,10 @@ async function renameKey(path, oldKey, newKey) {
     await ref.child(newKey).set(oldData);
     // hapus key lama
     await ref.child(oldKey).remove();
+}
+
+function generate6digit(){
+    return Math.floor(Math.random()* ((999999 - 100000) +1) + 100000);
 }
 
 
@@ -68,7 +85,6 @@ io.on("connection", async (socket) => {
 
     socket.on("admin-tps-request-tps", () => {
         db.ref("TPS").on("value", (snapshot) => {
-            console.log(snapshot.val())
             if(!!snapshot.val()){
                 socket.emit("admin-tps-update-tps", {...snapshot.val()});
             }
@@ -78,10 +94,26 @@ io.on("connection", async (socket) => {
     socket.on("admin-tps-send-status", (tps) => {
         if(tps.id){
             db.ref(`TPS/${tps.id}`).update({
-                status: tps.status
+                status: tps.status,
             });
         }
-    })
+    });
+
+    socket.on("admin-tps-add-tps", (tps) => {
+        if(tps){
+            db.ref(`TPS/${tps}`).set({
+                status: 0,
+                suara: 0,
+                token: generate6digit()
+            });
+        }
+    });
+
+    socket.on("admin-tps-delete-tps", (tps) => {
+        if(tps){
+            db.ref(`TPS/${tps}`).remove();
+        }
+    });
 });
 
 
@@ -99,7 +131,7 @@ app.get("/admin/dashboard", async (req, res) => {
     const dataKandidat = await db.ref("kandidat").once("value");
     const kandidat = dataKandidat.val(); 
     res.render("pages/dashboard", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Dashboard - Smansekata Vote",
         page: "Dashboard",
         kandidat,
@@ -108,35 +140,35 @@ app.get("/admin/dashboard", async (req, res) => {
 });
 app.get("/admin/candidate", (req, res) => {
     res.render("pages/candidate", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Candidate - Smansekata Vote",
         page: "Daftar Kandidat"
     });
 });
 app.get("/admin/tps", (req, res) => {
     res.render("pages/tps", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "TPS - Smansekata Vote",
         page: "TPS"
     });
 });
 app.get("/admin/settings", (req, res) => {
     res.render("pages/settings", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Pengaturan - Smansekata Vote",
         page: "Pengaturan"
     });
 });
 app.get("/admin/reports", (req, res) => {
     res.render("pages/reports", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Hasil dan Laporan - Smansekata Vote",
         page: "Hasil dan Laporan"
     });
 });
 app.get("/admin/voter", (req, res) => {
     res.render("pages/voter", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Manajemen Pemilih - Smansekata Vote",
         page: "Manajemen Pemilih"
     });
@@ -144,17 +176,24 @@ app.get("/admin/voter", (req, res) => {
 
 app.get("/admin/add-candidate", (req, res) => {
     res.render("pages/attachment/addCandidate", {
-        layout: isFetch(req) ? false : "layouts/mainLayout",
+        layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Tambah Kandidat - Smansekata Vote",
         page: "Tambah Kandidat"
     });
 });
 
 app.get("/", (req, res) => {
-    res.json({msg: 'page under maintenance'});
+    res.redirect("/admin/dashboard")
 });
 
 
+
+
+app.post("/forms/candidate/add", upload.single("foto"),(req, res) => {
+    console.log(req.file);
+    console.log(req.body);
+    res.json(1);
+});
 
 server.listen(80, () => {
     console.log("server running");

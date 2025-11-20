@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%=title%></title>
     <link rel="stylesheet" href="/libs/font-poppins.css">
+    <link rel="stylesheet" href="/styles/sweetalert2.min.css">
     <script src="/libs/tailwind.js"></script>
     <script src="/libs/socket.io.min.js"></script>
     <script>
@@ -13,7 +14,9 @@
         socket.on("disconnect", ()=>{console.log("socket disconnected");});
         socket.on("connect_error", ()=>{console.log("socket connection error");});
     </script>
-    <script scr="/libs/sweetalert2.min.js"></script>
+    <script src="/libs/sweetalert2.min.js"></script>
+
+    <!-- <script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <script src="/libs/chart.umd.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
@@ -58,9 +61,8 @@
             <%- body %>
         </div>
     </main>
-    <script src="/scripts/mainLayout.js"></script>
+    <script src="/scripts/adminLayout.js"></script>
     <script>
-        console.log(warn());
         const refresher = new WebSocket("ws://localhost");
         refresher.addEventListener("message", (event) => {
             if (event.data === "reload") {

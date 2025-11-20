@@ -1,25 +1,80 @@
-<div class="p-3 bg-white rounded-md">
-    <form id="form-candidate">
-        <div class="flex flex-col gap-4 flex-1">
-            <div class="flex flex-col gap-1 text-sm text-neutral-600">
-                <label for="nama">Nama Kandidat*</label>
-                <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="nama" id="nama" placeholder="Masukkan Nama Kandidat...">
+<div>
+    <div class="p-3 bg-white rounded-md flex gap-3 mb-3">
+        <form id="form-candidate" class="flex-1">
+            <div class="flex flex-col gap-4 flex-1">
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="nama">Nama Kandidat*</label>
+                    <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="nama" id="nama" placeholder="Masukkan Nama Kandidat...">
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="kelas">Kelas*</label>
+                    <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="kelas" id="kelas" placeholder="Masukkan Kelas...">
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="visi">Visi*</label>
+                    <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="visi" id="visi" placeholder="Visi Kandidat"></textarea>
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="misi">Misi*</label>
+                    <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"></textarea>
+                </div>
+                
             </div>
-            <div class="flex flex-col gap-1 text-sm text-neutral-600">
-                <label for="kelas">Kelas*</label>
-                <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="kelas" id="kelas" placeholder="Masukkan Kelas...">
+        </form>
+        <div class="flex flex-col items-center mt-6 w-70 rounded-md h-70 ">
+            <div class="mb-3" id="image-container">
+                <div id="image-placeholder" class="w-48 h-55 border border-dashed border-neutral-400 rounded-md"></div>
+                <img id="preview" class="h-55 w-48 object-cover rounded-md hidden" />
             </div>
-            <div class="flex flex-col gap-1 text-sm text-neutral-600">
-                <label for="visi">Visi*</label>
-                <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="visi" id="visi" placeholder="Visi Kandidat"></textarea>
-            </div>
-            <div class="flex flex-col gap-1 text-sm text-neutral-600">
-                <label for="misi">Misi*</label>
-                <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"></textarea>
-            </div>
-            
+            <label class="cursor-pointer inline-block">
+                <div class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs">
+                    Pilih Gambar
+                </div>
+                <input id="imgInput" type="file" accept="image/*" class="hidden" />
+            </label>
         </div>
-        <button class="text-sm ">Simpan</button>
-
-    </form>
+    </div>
+    <button id="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs" type="submit">Simpan</button>
+    <button id="cancel" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition w-max text-xs" type="submit">Batal</button>
 </div>
+
+
+<script>
+    const input = document.getElementById("imgInput");
+    const preview = document.getElementById("preview");
+    const imageContaier = $id("image-container");
+    const imagePlaceholder = $id("image-placeholder");
+    const form = $id("form-candidate");
+    input.addEventListener("change", () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePlaceholder.classList.add("hidden")
+            preview.src = e.target.result;
+            preview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+    });
+    $id("submit").addEventListener("click", async (e) => {
+        e.preventDefault;
+        const file = input.files[0];
+        if(!file) {alert("tidak ada gambar"); return}
+        const fd = new FormData(form);
+        if(fd.get("nama") == "" || fd.get("kelas") == "" ||  fd.get("visi") == "" || fd.get("misi") == ""){
+            alert("isi data kandidat dengan lengkap")
+            return;
+        }
+        
+
+        fd.append("foto", file);
+
+        const req = await fetch("/forms/candidate/add", {
+            method: "POST",
+            body: fd,
+        });
+        const data = await req.json();
+
+    });
+</script>
