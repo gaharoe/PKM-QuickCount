@@ -1,3 +1,20 @@
+function warn(title=""){
+    const popup = $id("popup");
+    const popupTitle = $id("popup-title");
+
+    popup.classList.remove("hidden");
+    popup.addEventListener("click", (e) => {
+        if(e.target.closest("#popup-yes")){
+            popup.classList.add("hidden");
+            return 1;
+        } else if (e.target.closest("#popup-no") || e.target.closest("#popup-close")){
+            popup.classList.add("hidden");
+            return 0;
+        }
+    });
+
+}
+
 $("#slider").click(function (e) { 
     e.preventDefault();
     $("#sidebar").toggleClass("-ml-64");

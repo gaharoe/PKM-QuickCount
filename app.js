@@ -68,6 +68,7 @@ io.on("connection", async (socket) => {
 
     socket.on("admin-tps-request-tps", () => {
         db.ref("TPS").on("value", (snapshot) => {
+            console.log(snapshot.val())
             if(!!snapshot.val()){
                 socket.emit("admin-tps-update-tps", {...snapshot.val()});
             }
@@ -76,13 +77,15 @@ io.on("connection", async (socket) => {
 
     socket.on("admin-tps-send-status", (tps) => {
         if(tps.id){
-            db.ref(`TPS/${tps.id}`).update({status: tps.status});
+            db.ref(`TPS/${tps.id}`).update({
+                status: tps.status
+            });
         }
     })
 });
 
 
-chokidar.watch("views").on("change", path => {
+chokidar.watch(["views", "public"]).on("change", path => {
     wss.clients.forEach(client =>{
         if (client.readyState === WebSocket.OPEN) {
             client.send("reload");

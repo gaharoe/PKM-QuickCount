@@ -1,12 +1,13 @@
 function tpsRequestData(){
-    
     socket.off("admin-tps-update-tps")
     socket.emit("admin-tps-request-tps");
     socket.on("admin-tps-update-tps", (tps) => {
-        $id("candidate-table").innerHTML = `
+        let index = 0;
+        $id("tps-table").innerHTML = `
             <tr class="bg-sky-900 text-neutral-200 h-6">
                 <td width="40" height="35" class="text-center">#</td>
                 <td>TPS ID</td>
+                <td width="150">Token</td>
                 <td width="150">Perolehan Suara</td>
                 <td width="100">Status</td>
             </tr>
@@ -15,7 +16,11 @@ function tpsRequestData(){
         for(id in tps) {
             let status = !tps[id].status ? {color: "bg-red-600", name: "offline", checked: ""} : {color: "bg-emerald-500", name:"online", checked: "checked"};
             let card = document.createElement("div");
+            let table = document.createElement("tr");
+            
             card.className = "p-2 bg-white rounded-sm shadow-md/15 w-[250px] min-w-[240px]";
+            table.className = `h-6 bg-slate-${++index%2==0?"100":"200"}`;
+
             card.innerHTML = `
                 <div class="flex items-center p-0 text-xs text-neutral-700"><div class="w-2 h-2 ${status.color} mr-2 rounded-full"></div> ${status.name} </div>
                 <div class="w-60 h-56 flex flex-col justify-center items-center text-lg text-neutral-600">
@@ -24,15 +29,34 @@ function tpsRequestData(){
                     </svg>
                     <p>${ id }</p>
                 </div>
-                <div>
+                <div class="flex items-center">
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" class="sr-only peer switch" data-id="${id}" ${status.checked}>
                         <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors"></div>
                         <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7 shadow"></div>
                     </label>
+                    <button class="inline-flex items-center justify-center rounded-sm w-7 h-7 ml-2 cursor-pointer">
+                        <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 7H20" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
             `;
+            table.innerHTML = `
+                <tr class="bg-slate-200 h-6 text-center">
+                    <td class="text-center">${index}</td>
+                    <td>${id}</td>
+                    <td>${tps[id].token}</td>
+                    <td>${tps[id].suara}</td>
+                    <td>${tps[id].status ? "online": "offline"}</td>
+                </tr>
+            `;
             $id("tps-cards").appendChild(card);
+            $id("tps-table").appendChild(table);
         }
             
     });
@@ -41,7 +65,14 @@ function tpsRequestData(){
         let tpsID = sw.dataset.id
         if(sw){
             sw.checked ? 
-                confirm(`nyalakan ${tpsID}?`) ?
+                Swal.fire({
+                    title: `Nyalakan ${tpsID}?`,
+                    icon: "question",
+                    confirmButtonText: "ya",
+                    cancelButtonText: "batal",
+                    showCancelButton: true,
+                    showCloseButton: true,
+                }) ?
                     socket.emit("admin-tps-send-status", {id: tpsID, status: 1}) :
                     sw.checked = false
                 :
