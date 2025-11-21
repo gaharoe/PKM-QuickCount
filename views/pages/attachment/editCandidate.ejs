@@ -1,0 +1,43 @@
+<div class="mb-5">
+    <div class="p-3 bg-white rounded-md flex gap-3 mb-3">
+        <form id="form-candidate" class="flex-1">
+            <div class="flex flex-col gap-4 flex-1">
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="kandidat">Kandidat Ke-*</label>
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kandidat" id="nama" value="<%= candidateID.split(" ")[1] %>">
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="nama">Nama Kandidat*</label>
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="nama" id="nama" placeholder="Masukkan Nama Kandidat..." value="<%= candidateData.nama %>">
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="kelas">Kelas*</label>
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kelas" id="kelas" placeholder="Masukkan Kelas..." value="<%= candidateData.kelas %>">
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="visi">Visi*</label>
+                    <textarea class="bg-slate-200 p-3 rounded-sm outline-none h-30" name="visi" id="visi" placeholder="Visi Kandidat" ><%= candidateData.visi %></textarea>
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="misi">Misi*</label>
+                    <textarea class="bg-slate-200 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"><%= candidateData.visi %></textarea>
+                </div>
+            </div>
+        </form>
+        <div class="flex flex-col items-center mt-6 w-70 rounded-md h-70 ">
+            <div class="mb-3" id="image-container">
+                <img id="image-placeholder" class="h-55 w-48 object-cover rounded-md border border-dashed" src="<%= candidateData.foto %>"/>
+                <img id="preview" class="h-55 w-48 object-cover rounded-md hidden border border-dashed" />
+            </div>
+            <label class="cursor-pointer inline-block">
+                <div class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs">
+                    Pilih Gambar
+                </div>
+                <input id="imgInput" type="file" accept="image/*" class="hidden" />
+            </label>
+        </div>
+    </div>
+    <button id="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs" type="submit">Simpan</button>
+    <button id="cancel" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition w-max text-xs" type="submit">Batal</button>
+    <script>editCandidate()</script>
+</div>

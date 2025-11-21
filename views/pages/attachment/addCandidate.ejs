@@ -1,10 +1,10 @@
-<div>
+<div class="mb-5">
     <div class="p-3 bg-white rounded-md flex gap-3 mb-3">
         <form id="form-candidate" class="flex-1">
             <div class="flex flex-col gap-4 flex-1">
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="kandidat">Kandidat Ke-*</label>
-                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kandidat" id="nama" placeholder="" >
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kandidat" id="nama" value="<%= totalCandidate+1 %>" >
                 </div>
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="nama">Nama Kandidat*</label>
@@ -22,7 +22,6 @@
                     <label for="misi">Misi*</label>
                     <textarea class="bg-slate-200 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"></textarea>
                 </div>
-                
             </div>
         </form>
         <div class="flex flex-col items-center mt-6 w-70 rounded-md h-70 ">
@@ -40,56 +39,6 @@
     </div>
     <button id="submit" class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs" type="submit">Simpan</button>
     <button id="cancel" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition w-max text-xs" type="submit">Batal</button>
+
+    <script>addCandidate()</script>
 </div>
-
-
-<script>
-    const input = document.getElementById("imgInput");
-    const preview = document.getElementById("preview");
-    const imageContaier = $id("image-container");
-    const imagePlaceholder = $id("image-placeholder");
-    const form = $id("form-candidate");
-    input.addEventListener("change", () => {
-        const file = input.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePlaceholder.classList.add("hidden")
-            preview.src = e.target.result;
-            preview.classList.remove("hidden");
-        };
-        reader.readAsDataURL(file);
-    });
-    $id("submit").addEventListener("click", async (e) => {
-        e.preventDefault;
-        const file = input.files[0];
-        if(!file) {alert("tidak ada gambar"); return}
-        const fd = new FormData(form);
-        if(fd.get("nama") == "" || fd.get("kelas") == "" ||  fd.get("visi") == "" || fd.get("misi") == ""){
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Isi data kandidat dengan lengkap yaaa...",
-            });
-            return; 
-        }
-        
-        
-        fd.append("foto", file);
-        
-        const req = await fetch("/forms/candidate/add", {
-            method: "POST",
-            body: fd,
-        });
-        const data = await req.json();
-        if(data){
-            Swal.fire({
-                icon: "success",
-                title: "Sukses",
-                text: "Data berhasil ditambahkan",
-            }).then(res => window.location.href = "/admin/candidate");    
-        }
-    });
-    $id("cancel").addEventListener("click", () => {window.location.href = "/admin/candidate"});
-</script>

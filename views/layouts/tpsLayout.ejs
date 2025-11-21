@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/libs/font-poppins.css">
+    <link rel="stylesheet" href="/styles/sweetalert2.min.css">
+    <script src="/libs/tailwind.js"></script>
+    <script src="/libs/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        socket.on("connect", ()=>{console.log("socket connected");});
+        socket.on("disconnect", ()=>{console.log("socket disconnected");});
+        socket.on("connect_error", ()=>{console.log("socket connection error");});
+    </script>
+    <script src="/libs/sweetalert2.min.js"></script>
+
+    <!-- <script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script src="/libs/chart.umd.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
+    <script src="/libs/jquery.min.js"></script>
+    <script src="/scripts/dashboard.js"></script>
+    <script src="/scripts/candidate.js"></script>
+    <script src="/scripts/tps.js"></script>
+    <script src="/scripts/addCandidate.js"></script>
+    <script src="/scripts/editCandidate.js"></script>
+    <style>
+        * {
+            font-family: 'Poppins';
+        }
+    </style>
+</head>
+<body class="overflow-hidden select-none flex bg-neutral-200">
+    <div id="popup" class="hidden text-sm flex items-center justify-center z-50 absolute top-0 bottom-0 right-0 left-0 bg-[rgb(0,0,0,.3)]">
+        <div class="p-3 bg-white rounded-sm">
+            <div class="mb-2">
+                <button id="popup-close" class="flex justify-center items-center w-4 h-4 rounded-full border border-neutral-400">
+                    <svg width="10px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="#0F0F0F"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="popup-title" class="mb-5 w-40 text-center">another lives?</div>
+            <button id="popup-yes" class="text-xs bg-blue-200 border border-blue-500 text-blue-500 px-2 py-1 rounded-full">ya</button>
+            <button id="popup-no" class="text-xs bg-red-200 border border-red-500 text-red-500 px-2 py-1 rounded-full">tidak</button>
+        </div>
+    </div>
+    <%- include("../partials/tpsSidebar") %>
+    <main class="flex-1 flex flex-col">
+        <div class="transition-all duration-200 fixed top-0 right-0 left-64 h-10 bg-neutral-50 shadow-md/5 flex items-center px-3" id="top-bar">
+            <button class="text-sky-950 transition-all duration-300 p-1 rounded-md outline outline-[rgb(0,0,0,0)] hover:outline-[rgb(0,0,0,.5)] outline-dashed" id="slider">
+                <svg width="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 18.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 6.32001H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <p class="ml-5 text-sm text-sky-950" id="position"><%=page%></p>
+        </div>
+        <div id="content" class="min-w-0 pt-14 px-4 max-h-screen h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
+            <%- body %>
+        </div>
+    </main>
+
+    <script src="/scripts/tpsLayout.js"></script>
+</body>
+</html>

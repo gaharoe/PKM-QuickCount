@@ -6,6 +6,7 @@ const ejsLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 // develompment lib
 const WebSocket = require("ws");
@@ -18,6 +19,7 @@ app.set('view engine', 'ejs');
 app.use(ejsLayout);
 app.use(cookieParser());
 app.use(express.static(__dirname+"/public"));
+app.use(express.json());
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
@@ -29,7 +31,7 @@ const io = new Server(server, {
 
 const upload = multer({storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, "temp/");
+            cb(null, "public/img/kandidat/");
         },
         filename: (req, file, cb) => {
             cb(null, Date.now()+path.extname(file.originalname));
@@ -52,11 +54,12 @@ function generate6digit(){
     return Math.floor(Math.random()* ((999999 - 100000) +1) + 100000);
 }
 
-
+let totalCandidate = 0;
+let totalTPS = 0;
 io.on("connection", async (socket) => {
-
     socket.on("admin-dashboard-request-charts", () => {
         db.ref("kandidat").on("value", (snapshot) => {
+            totalCandidate = snapshot.numChildren();
             if(!!snapshot.val()){
                 socket.emit("admin-polling-update", {
                     lables: Object.keys(snapshot.val()), 
@@ -65,6 +68,7 @@ io.on("connection", async (socket) => {
             }
         });
         db.ref("TPS").on("value", (snapshot) => {
+            totalTPS = snapshot.numChildren();
             if(!!snapshot.val()){
                 socket.emit("admin-tps-update", {
                     labels: Object.keys(snapshot.val()), 
@@ -175,10 +179,44 @@ app.get("/admin/voter", (req, res) => {
 });
 
 app.get("/admin/add-candidate", (req, res) => {
-    res.render("pages/attachment/addCandidate", {
-        layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Tambah Kandidat - Smansekata Vote",
-        page: "Tambah Kandidat"
+    db.ref("kandidat").once("value", (snapshot) => {
+        res.render("pages/attachment/addCandidate", {
+            layout: isFetch(req) ? false : "layouts/adminLayout",
+            title: "Tambah Kandidat - Smansekata Vote",
+            page: "Tambah Kandidat",
+            totalCandidate: snapshot.numChildren()
+        });
+    });
+});
+
+app.get("/admin/edit-candidate", (req, res) => {
+    const candidateID = req.query.id;
+    db.ref(`kandidat/${candidateID}`).once("value", (snapshot) => {
+        res.render("pages/attachment/editCandidate", {
+            layout: isFetch(req) ? false : "layouts/adminLayout",
+            title: `Edit Kandidat ${candidateID} - Smansekata Vote`,
+            page: `Edit Kandidat ${candidateID}`,
+            candidateID,
+            candidateData: snapshot.val()
+        });
+    });
+});
+
+
+
+app.get("/TPS/dashboard", (req, res) => {
+    res.render("pages/tps/tpsDashboard", {
+        layout: isFetch(req) ? false : "layouts/tpsLayout",
+        title: "TPS Dashboard - Smansekata Vote",
+        page: "TPS Dashboard"
+    });
+});
+
+app.get("/TPS/vote", (req, res) => {
+    res.render("pages/tps/tpsVote", {
+        layout: isFetch(req) ? false : "layouts/tpsLayout",
+        title: "TPS Dashboard - Smansekata Vote",
+        page: "TPS vote"
     });
 });
 
@@ -189,10 +227,39 @@ app.get("/", (req, res) => {
 
 
 
-app.post("/forms/candidate/add", upload.single("foto"),(req, res) => {
-    console.log(req.file);
-    console.log(req.body);
-    res.json(1);
+app.post("/forms/candidate/add", upload.single("foto"), (req, res) => {
+    db.ref(`kandidat/kandidat ${req.body.kandidat}`).once("value", (snapshot) => {
+        if(snapshot.val()){
+            fs.unlinkSync(req.file.path);
+            res.json({result: 2});
+        } else {
+            db.ref(`kandidat/kandidat ${req.body.kandidat}`).set({
+                nama: req.body.nama,
+                kelas: req.body.kelas,
+                visi: req.body.visi,
+                misi: req.body.misi,
+                foto: `/img/kandidat/${req.file.filename}`,
+                suara: 0
+            });
+            res.json({result: true});
+        }
+    });
+});
+
+app.post("/forms/candidate/edit", upload.single("foto"), (req, res) => {
+    db.ref(`kandidat/kandidat ${req.body.kandidat}`).set({
+        nama: req.body.nama,
+        kelas: req.body.kelas,
+        visi: req.body.visi,
+        misi: req.body.misi,
+        foto: `/img/kandidat/${req.file.filename}`,
+        suara: 0
+    });
+});
+
+app.post("/forms/candidate/delete", (req, res) => {
+    db.ref(`kandidat/${req.body.candidateID}`).remove();
+    res.json({result: true});
 });
 
 server.listen(80, () => {
