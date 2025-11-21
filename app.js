@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const verifyTPSAuth = require("./utils/jwtAuth.js");
 
 // develompment lib
 const WebSocket = require("ws");
@@ -202,6 +204,16 @@ app.get("/admin/edit-candidate", (req, res) => {
     });
 });
 
+app.get("/TPS", (req, res) => {
+    db.ref("TPS").once("value", (snapshot) => {
+        res.render("pages/tps/TpsLogin", {
+            layout: isFetch(req) ? false : "layouts/tpsLayout",
+            title: "TPS Login - Smansekata Vote",
+            page: "TPS Login",
+            tps: Object.keys(snapshot.val())
+        });
+    });
+});
 
 
 app.get("/TPS/dashboard", (req, res) => {
@@ -212,11 +224,14 @@ app.get("/TPS/dashboard", (req, res) => {
     });
 });
 
-app.get("/TPS/vote", (req, res) => {
-    res.render("pages/tps/tpsVote", {
-        layout: isFetch(req) ? false : "layouts/tpsLayout",
-        title: "TPS Dashboard - Smansekata Vote",
-        page: "TPS vote"
+app.get("/TPS/vote", verifyTPSAuth,(req, res) => {
+    db.ref("kandidat").once("value", (snapshot) => {
+        res.render("pages/tps/tpsVote", {
+            layout: isFetch(req) ? false : "layouts/tpsLayout",
+            title: "TPS Dashboard - Smansekata Vote",
+            page: "TPS vote",
+            candidate: snapshot.val()
+        });
     });
 });
 
@@ -260,6 +275,49 @@ app.post("/forms/candidate/edit", upload.single("foto"), (req, res) => {
 app.post("/forms/candidate/delete", (req, res) => {
     db.ref(`kandidat/${req.body.candidateID}`).remove();
     res.json({result: true});
+});
+
+app.post("/forms/tps/vote", (req, res) => {
+    const kandidatRef = db.ref(`kandidat/${req.body.candidateID}`);
+    kandidatRef.once("value", (snapshot) => {
+        if(snapshot.val()){ 
+            const currentVotes = snapshot.val().suara || 0;
+            kandidatRef.update({
+                suara: currentVotes + 1
+            });
+            const tpsRef = db.ref(`TPS/${req.body.tpsID}`);
+            tpsRef.once("value", (tpsSnapshot) => {
+                if(tpsSnapshot.val()){
+                    const currentTPSVotes = tpsSnapshot.val().suara || 0;
+                    tpsRef.update({
+                        suara: currentTPSVotes + 1,
+                        status: 2
+                    });
+                    res.json({result: true});
+                } else {
+                    res.json({result: false, message: "TPS not found"});
+                }
+            });
+        } else {
+            res.json({result: false, message: "Candidate not found"});
+        }   
+    });
+});
+// make jwt auth for tps access
+
+app.post("/tps/login", (req, res) => {
+    db.ref(`TPS/${req.body.tps}`).once("value", (snapshot) => {
+        if(snapshot.val()){
+            if(snapshot.val().token == req.body.token){
+                res.cookie("tps_auth", jwt.sign({tpsID: req.body.tps}, process.env.JWT_SECRET), {httpOnly: true});
+                res.json({result: true});
+            } else {
+                res.json({result: false, message: "Invalid token"});
+            }
+        } else {
+            res.json({result: false, message: "TPS not found"});
+        }
+    });
 });
 
 server.listen(80, () => {
