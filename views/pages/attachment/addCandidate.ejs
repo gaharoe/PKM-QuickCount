@@ -3,20 +3,24 @@
         <form id="form-candidate" class="flex-1">
             <div class="flex flex-col gap-4 flex-1">
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
+                    <label for="kandidat">Kandidat Ke-*</label>
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kandidat" id="nama" placeholder="" >
+                </div>
+                <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="nama">Nama Kandidat*</label>
-                    <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="nama" id="nama" placeholder="Masukkan Nama Kandidat...">
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="nama" id="nama" placeholder="Masukkan Nama Kandidat...">
                 </div>
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="kelas">Kelas*</label>
-                    <input class="bg-slate-100 p-3 rounded-sm outline-none" type="text" name="kelas" id="kelas" placeholder="Masukkan Kelas...">
+                    <input class="bg-slate-200 p-3 rounded-sm outline-none" type="text" name="kelas" id="kelas" placeholder="Masukkan Kelas...">
                 </div>
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="visi">Visi*</label>
-                    <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="visi" id="visi" placeholder="Visi Kandidat"></textarea>
+                    <textarea class="bg-slate-200 p-3 rounded-sm outline-none h-30" name="visi" id="visi" placeholder="Visi Kandidat"></textarea>
                 </div>
                 <div class="flex flex-col gap-1 text-sm text-neutral-600">
                     <label for="misi">Misi*</label>
-                    <textarea class="bg-slate-100 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"></textarea>
+                    <textarea class="bg-slate-200 p-3 rounded-sm outline-none h-30" name="misi" id="misi" placeholder="Misi Kandidat"></textarea>
                 </div>
                 
             </div>
@@ -24,7 +28,7 @@
         <div class="flex flex-col items-center mt-6 w-70 rounded-md h-70 ">
             <div class="mb-3" id="image-container">
                 <div id="image-placeholder" class="w-48 h-55 border border-dashed border-neutral-400 rounded-md"></div>
-                <img id="preview" class="h-55 w-48 object-cover rounded-md hidden" />
+                <img id="preview" class="h-55 w-48 object-cover rounded-md hidden border border-dashed" />
             </div>
             <label class="cursor-pointer inline-block">
                 <div class="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition w-max text-xs">
@@ -63,18 +67,29 @@
         if(!file) {alert("tidak ada gambar"); return}
         const fd = new FormData(form);
         if(fd.get("nama") == "" || fd.get("kelas") == "" ||  fd.get("visi") == "" || fd.get("misi") == ""){
-            alert("isi data kandidat dengan lengkap")
-            return;
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Isi data kandidat dengan lengkap yaaa...",
+            });
+            return; 
         }
         
-
+        
         fd.append("foto", file);
-
+        
         const req = await fetch("/forms/candidate/add", {
             method: "POST",
             body: fd,
         });
         const data = await req.json();
-
+        if(data){
+            Swal.fire({
+                icon: "success",
+                title: "Sukses",
+                text: "Data berhasil ditambahkan",
+            }).then(res => window.location.href = "/admin/candidate");    
+        }
     });
+    $id("cancel").addEventListener("click", () => {window.location.href = "/admin/candidate"});
 </script>

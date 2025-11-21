@@ -39,11 +39,11 @@ function tpsRequestData(){
                     </label>
                     <button data-id="${id}" class="deleteTps inline-flex items-center justify-center rounded-sm w-7 h-7 ml-2 cursor-pointer">
                         <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M14 11V17" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M4 7H20" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10 11V17" stroke="#D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 11V17" stroke="#D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 7H20" stroke="#D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="#D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#D55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
@@ -54,7 +54,12 @@ function tpsRequestData(){
                     <td>${id}</td>
                     <td>${tps[id].token}</td>
                     <td>${tps[id].suara}</td>
-                    <td>${tps[id].status ? "online": "offline"}</td>
+                    <td>
+                        <div class="${status.color} flex gap-2 items-center w-fit px-2 rounded-full text-white">
+                            <div class="w-1 h-1 bg-white rounded-full"></div>
+                            ${status.name}
+                        </div>
+                    </td>
                 </tr>
             `;
             $id("tps-cards").appendChild(card);
