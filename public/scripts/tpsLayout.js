@@ -25,3 +25,15 @@ $("#nav-btns").click(function (e) {
     }
 });
 
+$("#logout").click(function (e) { 
+    e.preventDefault();
+    alert("asdf")
+    $.ajax({
+        type: "POST",
+        url: "/logout",
+        success: function () {
+            window.location.href = "/login"
+        }
+    });
+});
+

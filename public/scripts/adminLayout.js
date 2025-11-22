@@ -25,3 +25,8 @@ $("#nav-btns").click(function (e) {
     }
 });
 
+$("#logout").click(function (e) {
+    e.preventDefault();
+    fetch("/logout", {method: 'POST'}).then(data => data.json()).then(data => window.location.href = "/admin/login");
+});
+

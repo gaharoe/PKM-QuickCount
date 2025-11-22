@@ -118,6 +118,7 @@ function loadDashboardCharts() {
     });
 
     socket.on("admin-tps-update", (datas) => {
+        $id("tpsAktif").innerText = datas.tpsAktif;
         $id("table-tps").innerHTML = `
             <tr class="bg-sky-900 text-neutral-200 h-6">
                 <td width="40" class="text-center">#</td>

@@ -91,7 +91,7 @@ function candidateRequestData(){
                         Swal.fire({
                             text: `${candidateID} berhasil dihapus.`,
                             icon: 'success',
-                            timer: 1500,
+                            timer: 1000,
                             showConfirmButton: false
                         });
                     }

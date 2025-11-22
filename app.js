@@ -8,11 +8,12 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const verifyTPSAuth = require("./utils/jwtAuth.js");
+const {verifyAdminAuth, verifyTPSAuth} = require("./utils/jwtAuth.js");
 
 // develompment lib
 const WebSocket = require("ws");
 const chokidar = require("chokidar");
+const { layouts } = require("chart.js");
 // -----------------------------------
 
 const app = express();
@@ -75,7 +76,8 @@ io.on("connection", async (socket) => {
                 socket.emit("admin-tps-update", {
                     labels: Object.keys(snapshot.val()), 
                     data: Object.values(snapshot.val()).map(item => item.suara),
-                    status: Object.values(snapshot.val()).map(item => item.status)
+                    status: Object.values(snapshot.val()).map(item => item.status),
+                    tpsAktif: snapshot.numChildren()
                 });
             }
         });
@@ -98,11 +100,9 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("admin-tps-send-status", (tps) => {
-        if(tps.id){
-            db.ref(`TPS/${tps.id}`).update({
-                status: tps.status,
-            });
-        }
+        db.ref(`TPS/${tps.id}`).update({
+            status: tps.status,
+        });
     });
 
     socket.on("admin-tps-add-tps", (tps) => {
@@ -120,6 +120,20 @@ io.on("connection", async (socket) => {
             db.ref(`TPS/${tps}`).remove();
         }
     });
+
+    socket.on("tps-vote", (data) => {
+        // console.log(data.candidateID);
+        db.ref(`kandidat/${data.candidateID}`).once("value", (s) => {
+            db.ref(`kandidat/${data.candidateID}`).update({
+                suara: s.val().suara + 1
+            });
+        });
+        db.ref(`TPS/${data.tpsID}`).once("value", (s) => {
+            db.ref(`TPS/${data.tpsID}`).update({
+                suara: s.val().suara + 1
+            });
+        });
+    });
 });
 
 
@@ -133,7 +147,7 @@ chokidar.watch(["views", "public"]).on("change", path => {
 
 function isFetch(req) {return req.headers["x-requested-with"] === "XMLHttpRequest";}
 
-app.get("/admin/dashboard", async (req, res) => {
+app.get("/admin/dashboard", verifyAdminAuth, async (req, res) => {
     const dataKandidat = await db.ref("kandidat").once("value");
     const kandidat = dataKandidat.val(); 
     res.render("pages/dashboard", {
@@ -144,35 +158,35 @@ app.get("/admin/dashboard", async (req, res) => {
         totalKandidat: dataKandidat.numChildren()
     });
 });
-app.get("/admin/candidate", (req, res) => {
+app.get("/admin/candidate", verifyAdminAuth,(req, res) => {
     res.render("pages/candidate", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Candidate - Smansekata Vote",
         page: "Daftar Kandidat"
     });
 });
-app.get("/admin/tps", (req, res) => {
+app.get("/admin/tps", verifyAdminAuth,(req, res) => {
     res.render("pages/tps", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "TPS - Smansekata Vote",
         page: "TPS"
     });
 });
-app.get("/admin/settings", (req, res) => {
+app.get("/admin/settings", verifyAdminAuth,(req, res) => {
     res.render("pages/settings", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Pengaturan - Smansekata Vote",
         page: "Pengaturan"
     });
 });
-app.get("/admin/reports", (req, res) => {
+app.get("/admin/reports", verifyAdminAuth,(req, res) => {
     res.render("pages/reports", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Hasil dan Laporan - Smansekata Vote",
         page: "Hasil dan Laporan"
     });
 });
-app.get("/admin/voter", (req, res) => {
+app.get("/admin/voter", verifyAdminAuth,(req, res) => {
     res.render("pages/voter", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
         title: "Manajemen Pemilih - Smansekata Vote",
@@ -204,12 +218,12 @@ app.get("/admin/edit-candidate", (req, res) => {
     });
 });
 
-app.get("/TPS", (req, res) => {
+app.get("/login", (req, res) => {
     db.ref("TPS").once("value", (snapshot) => {
-        res.render("pages/tps/TpsLogin", {
+        res.render("pages/login", {
             layout: isFetch(req) ? false : "layouts/tpsLayout",
             title: "TPS Login - Smansekata Vote",
-            page: "TPS Login",
+            page: "Login",
             tps: Object.keys(snapshot.val())
         });
     });
@@ -230,13 +244,24 @@ app.get("/TPS/vote", verifyTPSAuth,(req, res) => {
             layout: isFetch(req) ? false : "layouts/tpsLayout",
             title: "TPS Dashboard - Smansekata Vote",
             page: "TPS vote",
-            candidate: snapshot.val()
+            candidate: snapshot.val(),
+            tpsID: req.tpsID
         });
     });
 });
 
+app.get("/admin/login", (req, res) => {
+    res.render("pages/adminLogin", {
+        layout: "layouts/tpsLayout",
+        page: "Login",
+        title: "Admin Login - Smansekata Vote"
+    });
+});
+
+
+
 app.get("/", (req, res) => {
-    res.redirect("/admin/dashboard")
+    res.redirect("/login")
 });
 
 
@@ -309,7 +334,13 @@ app.post("/tps/login", (req, res) => {
     db.ref(`TPS/${req.body.tps}`).once("value", (snapshot) => {
         if(snapshot.val()){
             if(snapshot.val().token == req.body.token){
-                res.cookie("tps_auth", jwt.sign({tpsID: req.body.tps}, process.env.JWT_SECRET), {httpOnly: true});
+                  res.cookie("tpsToken", jwt.sign({tpsID: req.body.tps}, process.env.JWT_SECRET, {expiresIn: '1d'}), {
+                    httpOnly: true, 
+                    secure: false,
+                    sameSite: "lax",
+                    maxAge: 24 * 60 * 60 * 1000,
+                    path: "/"
+                });
                 res.json({result: true});
             } else {
                 res.json({result: false, message: "Invalid token"});
@@ -318,6 +349,31 @@ app.post("/tps/login", (req, res) => {
             res.json({result: false, message: "TPS not found"});
         }
     });
+});
+
+app.post("/admin/login", (req,res) => {
+    db.ref("Users/1").once("value", (s) => {
+        const username = s.val().username;
+        const password = s.val().password;
+        if(username == req.body.username && password == req.body.password){
+            res.cookie("token", jwt.sign({user: username}, process.env.JWT_SECRET, {expiresIn: '1d'}), {
+              httpOnly: true, 
+              secure: false,
+              sameSite: "lax",
+              maxAge: 24 * 60 * 60 * 1000,
+              path: "/"
+            });
+            res.json({result: true});
+        } else {
+            res.json({result: false, message: "Username atau password salah"});
+        }
+    });
+});
+
+app.post("/logout", (req, res) => {
+    res.clearCookie("token", {path: "/"});
+    res.clearCookie("tpsToken", {path: "/"});
+    res.json({msg: 1})
 });
 
 server.listen(80, () => {

@@ -7,7 +7,7 @@
                     <p class="rounded-full w-fit text-xs bg-emerald-600 text-white px-3"><%=id%></p>
                     <h2 class="text-lg font-semibold"><%=candidate[id].nama%></h2>
                     <p class="text-gray-600 text-sm mb-5"><%=candidate[id].kelas%></p>
-                    <button onclick="voteCandidate('<%=id%>')" class="bg-blue-400  px-4 py-1 rounded-sm text-white hover:bg-blue-600 transition">Vote</button>
+                    <button onclick="voteCandidate('<%=id%>')" class="bg-blue-400  px-4 py-1 rounded-sm text-white hover:bg-blue-600 transition" >Vote</button>
                 </div>
             </div>
         <% } %>
@@ -16,6 +16,7 @@
 <script>
 
     const tpsID = "<%=tpsID%>";
+    $id("position").innerText = tpsID;
     function voteCandidate(candidateID){
         Swal.fire({
             title: 'Anda yakin?',
@@ -27,27 +28,14 @@
             confirmButtonText: 'Ya, vote!'
         }).then((result) => {
             if (result.isConfirmed) {
-                socket.emit("tps-vote", {candidateID: candidateID}, (response)=>{
-                    if(response.result == 1){
-                        Swal.fire(
-                            'Voted!',
-                            'Your vote has been recorded.',
-                            'success'
-                        )
-                    } else if(response.result == 0){
-                        Swal.fire(
-                            'Error!',
-                            'You have already voted.',
-                            'error'
-                        )
-                    } else {
-                        Swal.fire(
-                            'Error!',
-                            'An unknown error occurred.',
-                            'error'
-                        )
-                    }
+                socket.emit("tps-vote", {candidateID, tpsID})
+                Swal.fire({
+                    text: "Vote berhasil",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1000
                 });
+
             }
         });
     }

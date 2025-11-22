@@ -113,7 +113,7 @@ function tpsRequestData(){
             showCancelButton: true,
         }).then(result => {
             result.value ?
-                socket.emit("admin-tps-add-tps", lastTps) : 0;
+                socket.emit("admin-tps-add-tps", !lastTps? "TPS-1":lastTps) : 0;
         });
     });
 }
