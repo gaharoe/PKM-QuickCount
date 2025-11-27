@@ -366,6 +366,6 @@ app.get("/api/get/tps", (req, res) => {
 });
 
 
-server.listen(80, () => {
+server.listen(3000, () => {
     console.log("server running");
 });
