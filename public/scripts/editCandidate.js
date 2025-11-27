@@ -5,13 +5,13 @@ function editCandidate() {
     const imagePlaceholder = $id("image-placeholder");
     const form = $id("form-candidate");
 
-    document.addEventListener('click', () => {
-        const file = imageContainer.files[0];
-        if (!file) return;
+    // document.addEventListener('click', () => {
+    //     const file = imageContainer.files[0];
+    //     if (!file) return;
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-    });
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    // });
     
     input.addEventListener("change", () => {
         const file = input.files[0];
@@ -30,28 +30,28 @@ function editCandidate() {
         e.preventDefault;
         const file = input.files[0];
         const fd = new FormData(form);
-        console.log(fd.get("nama"), fd.get("kelas"), fd.get("visi"), fd.get("misi"));
-
+        
         fd.append("foto", file);
-
-        const req = await fetch("/forms/candidate/edit", {
-            method: "POST",
-            body: fd,
-        });
-        const data = await req.json();
-        if (data.result) {
-            Swal.fire({
-                icon: "success",
-                title: "Sukses",
-                text: "Data berhasil ditambahkan",
-            }).then(res => window.location.href = "/admin/candidate");
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Terjadi kesalahan pada server, coba lagi yaaa...",
-            });
-        }
+        
+        console.log(fd.get("nama"), fd.get("kelas"), fd.get("visi"), fd.get("misi"), fd.get("foto"));
+        // const req = await fetch("/forms/candidate/edit", {
+        //     method: "POST",
+        //     body: fd,
+        // });
+        // const data = await req.json();
+        // if (data.result) {
+        //     Swal.fire({
+        //         icon: "success",
+        //         title: "Sukses",
+        //         text: "Data berhasil ditambahkan",
+        //     }).then(res => window.location.href = "/admin/candidate");
+        // } else {
+        //     Swal.fire({
+        //         icon: "error",
+        //         title: "Oops...",
+        //         text: "Terjadi kesalahan pada server, coba lagi yaaa...",
+        //     });
+        // }
     });
     $id("cancel").addEventListener("click", () => { window.location.href = "/admin/candidate" });
 }

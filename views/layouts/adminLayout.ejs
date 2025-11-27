@@ -64,14 +64,5 @@
         </div>
     </main>
     <script src="/scripts/adminLayout.js"></script>
-    <script>
-        const refresher = new WebSocket("ws://localhost");
-        refresher.addEventListener("message", (event) => {
-            if (event.data === "reload") {
-                window.location.reload();
-            }
-        });
-
-    </script>
 </body>
 </html>

@@ -10,12 +10,6 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const {verifyAdminAuth, verifyTPSAuth} = require("./utils/jwtAuth.js");
 
-// develompment lib
-const WebSocket = require("ws");
-const chokidar = require("chokidar");
-const { layouts } = require("chart.js");
-// -----------------------------------
-
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -25,7 +19,6 @@ app.use(express.static(__dirname+"/public"));
 app.use(express.json());
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server});
 const io = new Server(server, {
     cors: {
         origin: "*"
@@ -137,14 +130,6 @@ io.on("connection", async (socket) => {
 });
 
 
-chokidar.watch(["views", "public"]).on("change", path => {
-    wss.clients.forEach(client =>{
-        if (client.readyState === WebSocket.OPEN) {
-            client.send("reload");
-        }
-    });
-});
-
 function isFetch(req) {return req.headers["x-requested-with"] === "XMLHttpRequest";}
 
 app.get("/admin/dashboard", verifyAdminAuth, async (req, res) => {
@@ -219,13 +204,10 @@ app.get("/admin/edit-candidate", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    db.ref("TPS").once("value", (snapshot) => {
-        res.render("pages/login", {
-            layout: isFetch(req) ? false : "layouts/tpsLayout",
-            title: "TPS Login - Smansekata Vote",
-            page: "Login",
-            tps: Object.keys(snapshot.val())
-        });
+    res.render("pages/login", {
+        layout: isFetch(req) ? false : "layouts/tpsLayout",
+        title: "TPS Login - Smansekata Vote",
+        page: "Login",
     });
 });
 
@@ -328,7 +310,6 @@ app.post("/forms/tps/vote", (req, res) => {
         }   
     });
 });
-// make jwt auth for tps access
 
 app.post("/tps/login", (req, res) => {
     db.ref(`TPS/${req.body.tps}`).once("value", (snapshot) => {
@@ -375,6 +356,15 @@ app.post("/logout", (req, res) => {
     res.clearCookie("tpsToken", {path: "/"});
     res.json({msg: 1})
 });
+
+
+// GET API
+app.get("/api/get/tps", (req, res) => {
+    db.ref("TPS").once("value", (d) => {
+        res.json(d.val() ? Object.keys(d.val()) : null);
+    });
+});
+
 
 server.listen(80, () => {
     console.log("server running");

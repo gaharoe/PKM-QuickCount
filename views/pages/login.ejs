@@ -4,16 +4,13 @@
         <form id="form" class="text-sm ">
             <div class="flex flex-col mb-5">
                 <label for="" class="mb-2">TPS Tersedia</label>
-                <select name="tps" class="outline-none bg-slate-200 text-xs p-2">
-                    <option value="0">-- Pilih TPS --</option>
-                    <% tps.forEach(t => { %>
-                    <option value="<%= t %>"><%= t %></option>
-                    <% }) %>
+                <select id="tps-opt" name="tps" class="outline-none bg-slate-200 text-xs p-2">
+                    <option id="tps-opt-0" value="0">-- Tidak ada TPS aktif --</option>
                 </select>
             </div>
             <div class="flex flex-col mb-5">
                 <label for="" class="mb-2">Nomor Token TPS</label>
-                <input type="number" name="password" class="outline-none bg-slate-200 text-xs p-2" placeholder="Masukkan password TPS">
+                <input type="number" name="password" class="outline-none bg-slate-200 text-xs p-2" placeholder="Masukkan token TPS">
             </div>
             <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-sm hover:bg-blue-700 transition">Masuk TPS</button>
             <div class="w-full text-center mt-3">
@@ -23,28 +20,44 @@
     </div>
 </div>
 <script>
-document.getElementById("form").addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const tps = formData.get("tps");
-    const password = formData.get("password");
     
-    const response = await fetch("/tps/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({tps: tps, token: password})
+    document.addEventListener("DOMContentLoaded", async () => {
+        const opt0 = document.querySelector("select#tps-opt option#tps-opt-0");
+        const req = await fetch("/api/get/tps", {method: "GET"});
+        const res = await req.json();
+        if(res){
+            opt0.innerHTML = "-- Pilih TPS --";
+            res.forEach(tps => {
+                const opt = document.createElement("option");
+                opt.setAttribute("value", tps);
+                opt.innerText = tps;
+                document.querySelector("select#tps-opt").appendChild(opt);
+            });
+        }
     });
-    const result = await response.json();
-    if(result.result){
-        window.location.href = `/TPS/vote`;
-    } else {
-        Swal.fire(
-            'Gagal!',
-            'TPS atau token salah.',
-            'error'
-        )
-    }
-});
+
+    document.getElementById("form").addEventListener("submit", async (e)=>{
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const tps = formData.get("tps");
+        const password = formData.get("password");
+        
+        const response = await fetch("/tps/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({tps: tps, token: password})
+        });
+        const result = await response.json();
+        if(result.result){
+            window.location.href = `/TPS/vote`;
+        } else {
+            Swal.fire(
+                'Gagal!',
+                'TPS atau token salah.',
+                'error'
+            )
+        }
+    });
 </script>
