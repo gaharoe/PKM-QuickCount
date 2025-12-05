@@ -14,11 +14,9 @@ function loadDashboardCharts() {
             datasets: [
                 {
                     data: [],
-                    // backgroundColor: "#3B82F6", // biru elegan
-                    // borderColor: "#2563EB",     // biru lebih tua buat aksen
                     borderWidth: 1,
-                    borderRadius: 6,            // sedikit rounded biar halus
-                    hoverBackgroundColor: "#60A5FA", // biru muda saat hover
+                    borderRadius: 6,
+                    hoverBackgroundColor: "#60A5FA",
                     barPercentage: 0.5
                 }
             ]
@@ -57,7 +55,7 @@ function loadDashboardCharts() {
             },
             animation: {
                 duration: 1500,
-                easing: "easeInOutCirc" // efek mantul pas muncul
+                easing: "easeInOutCirc"
             }
         }
     });
@@ -69,7 +67,6 @@ function loadDashboardCharts() {
             datasets: [
                 {
                     data: [],
-                    // borderWidth: 1,
                     hoverOffset: 12,
                     borderRadius: 10,
                 }
@@ -128,9 +125,9 @@ function loadDashboardCharts() {
             </tr>
         `;
         datas.labels.forEach((label, index) => {
-            let status = datas.status[index]==0 ? ["offline", "bg-red-600"] : 
-                datas.status[index]==1 ? ["online", "bg-emerald-500"] : 
-                    ["pending", "bg-yellow-500"];
+            let status = !datas.status[index] ? ["offline", "bg-red-600"] : 
+                !datas.logged[index] ? ["available", "bg-orange-300"] : 
+                    ["online", "bg-emerald-500"];
             
             let tableRow = document.createElement("tr");
             tableRow.className = `h-6 bg-slate-${index%2==0? "300":"200"}`;

@@ -12,31 +12,5 @@
             </div>
         <% } %>
     </div>
+    <script>tpsVote("<%=tpsID%>")</script>
 </div>
-<script>
-
-    const tpsID = "<%=tpsID%>";
-    $id("position").innerText = tpsID;
-    function voteCandidate(candidateID){
-        Swal.fire({
-            title: 'Anda yakin?',
-            text: "Anda akan memilih " + candidateID,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, vote!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                socket.emit("tps-vote", {candidateID, tpsID})
-                Swal.fire({
-                    text: "Vote berhasil",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1000
-                });
-
-            }
-        });
-    }
-</script>

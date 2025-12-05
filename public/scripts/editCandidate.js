@@ -1,17 +1,8 @@
 function editCandidate() {
     const input = document.getElementById("imgInput");
     const preview = document.getElementById("preview");
-    const imageContainer = $id("image-container");
     const imagePlaceholder = $id("image-placeholder");
     const form = $id("form-candidate");
-
-    // document.addEventListener('click', () => {
-    //     const file = imageContainer.files[0];
-    //     if (!file) return;
-
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    // });
     
     input.addEventListener("change", () => {
         const file = input.files[0];
@@ -43,7 +34,7 @@ function editCandidate() {
         //     Swal.fire({
         //         icon: "success",
         //         title: "Sukses",
-        //         text: "Data berhasil ditambahkan",
+        //         text: "Data berhasil diubah",
         //     }).then(res => window.location.href = "/admin/candidate");
         // } else {
         //     Swal.fire({

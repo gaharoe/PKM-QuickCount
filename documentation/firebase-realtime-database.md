@@ -1,6 +1,7 @@
 
 
 # VARS
+```php
     $TABLE => node / table name
     $ROW => data id
     $DB_EVENT = [
@@ -10,44 +11,50 @@
         "child_moved" --> on data movement,
         "child_removed" --> on data deleted
     ];
+```
 
 
 
 # INITIAL
 
-    # firebase-admin library
+```javascript
+    // firebase-admin library
     const admin = require("firebase-admin");
     
-    # firebase json service account
+    //  firebase json service account
     const serviceAccount = JSON.parse();  
 
-    # initialize app
+    // initialize app
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: "URL"
     });
 
-    # assign DB
+    //  assign DB
     const db = admin.database();
-
+```
 
 
 # CREATE WITH RANDOM ID / ROW NAME
 
+```javascript
     db.ref("$TABLE").push(
         key1: "value", 
         key2: "value", 
         key3: "value", 
     );
+```
 
 
 # CREATE WITH SPECIFIC ID / ROW NAME
 
+```javascript
     db.ref("$TABLE/$ROW").set(
         key1: "value", 
         key2: "value", 
         key3: "value", 
     );
+```
 
 
 # READ ALL ONCE

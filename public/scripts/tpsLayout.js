@@ -27,12 +27,21 @@ $("#nav-btns").click(function (e) {
 
 $("#logout").click(function (e) { 
     e.preventDefault();
-    alert("asdf")
-    $.ajax({
-        type: "POST",
-        url: "/logout",
-        success: function () {
-            window.location.href = "/login"
+    Swal.fire({
+        text: "Keluar dari "+tpsID+" ?",
+        icon: "question",
+        showCancelButton: true
+    }).then(res => {
+        if(res.value){
+            $.ajax({
+                type: "POST",
+                url: "/logout",
+                contentType: "application/json",
+                data: JSON.stringify({tps: tpsID}),
+                success: function () {
+                    window.location.href = "/login"
+                }
+            });
         }
     });
 });

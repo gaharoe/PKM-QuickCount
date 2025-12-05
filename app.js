@@ -17,6 +17,7 @@ app.use(ejsLayout);
 app.use(cookieParser());
 app.use(express.static(__dirname+"/public"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -46,6 +47,12 @@ async function renameKey(path, oldKey, newKey) {
     await ref.child(oldKey).remove();
 }
 
+function tpsCheck(req, res, next) {
+    db.ref(`TPS/${req.tpsID}`).once("value", (s) => {
+        !s.val() ? res.redirect("/login") : next();
+    });
+}
+
 function generate6digit(){
     return Math.floor(Math.random()* ((999999 - 100000) +1) + 100000);
 }
@@ -53,6 +60,7 @@ function generate6digit(){
 let totalCandidate = 0;
 let totalTPS = 0;
 io.on("connection", async (socket) => {
+    console.log(socket.handshake.query.tpsID);
     socket.on("admin-dashboard-request-charts", () => {
         db.ref("kandidat").on("value", (snapshot) => {
             totalCandidate = snapshot.numChildren();
@@ -70,6 +78,7 @@ io.on("connection", async (socket) => {
                     labels: Object.keys(snapshot.val()), 
                     data: Object.values(snapshot.val()).map(item => item.suara),
                     status: Object.values(snapshot.val()).map(item => item.status),
+                    logged: Object.values(snapshot.val()).map(item => item.logged),
                     tpsAktif: snapshot.numChildren()
                 });
             }
@@ -85,10 +94,8 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("admin-tps-request-tps", () => {
-        db.ref("TPS").on("value", (snapshot) => {
-            if(!!snapshot.val()){
-                socket.emit("admin-tps-update-tps", {...snapshot.val()});
-            }
+        db.ref("TPS").on("value", (s) => {
+            socket.emit("admin-tps-update-tps", s.val()? {...s.val()} : null);
         });
     });
 
@@ -103,6 +110,7 @@ io.on("connection", async (socket) => {
             db.ref(`TPS/${tps}`).set({
                 status: 0,
                 suara: 0,
+                logged: 0,
                 token: generate6digit()
             });
         }
@@ -127,6 +135,11 @@ io.on("connection", async (socket) => {
             });
         });
     });
+
+    socket.on("tps-logged", (id) => {
+        io.to(socket.id).emit("msg", "hello");
+        console.log(socket.id);
+    });
 });
 
 
@@ -137,7 +150,7 @@ app.get("/admin/dashboard", verifyAdminAuth, async (req, res) => {
     const kandidat = dataKandidat.val(); 
     res.render("pages/dashboard", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Dashboard - Smansekata Vote",
+        title: "Dashboard - SEKATA",
         page: "Dashboard",
         kandidat,
         totalKandidat: dataKandidat.numChildren()
@@ -146,35 +159,35 @@ app.get("/admin/dashboard", verifyAdminAuth, async (req, res) => {
 app.get("/admin/candidate", verifyAdminAuth,(req, res) => {
     res.render("pages/candidate", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Candidate - Smansekata Vote",
+        title: "Candidate - SEKATA",
         page: "Daftar Kandidat"
     });
 });
 app.get("/admin/tps", verifyAdminAuth,(req, res) => {
     res.render("pages/tps", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "TPS - Smansekata Vote",
+        title: "TPS - SEKATA",
         page: "TPS"
     });
 });
 app.get("/admin/settings", verifyAdminAuth,(req, res) => {
     res.render("pages/settings", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Pengaturan - Smansekata Vote",
+        title: "Pengaturan - SEKATA",
         page: "Pengaturan"
     });
 });
 app.get("/admin/reports", verifyAdminAuth,(req, res) => {
     res.render("pages/reports", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Hasil dan Laporan - Smansekata Vote",
+        title: "Hasil dan Laporan - SEKATA",
         page: "Hasil dan Laporan"
     });
 });
 app.get("/admin/voter", verifyAdminAuth,(req, res) => {
     res.render("pages/voter", {
         layout: isFetch(req) ? false : "layouts/adminLayout",
-        title: "Manajemen Pemilih - Smansekata Vote",
+        title: "Manajemen Pemilih - SEKATA",
         page: "Manajemen Pemilih"
     });
 });
@@ -183,7 +196,7 @@ app.get("/admin/add-candidate", (req, res) => {
     db.ref("kandidat").once("value", (snapshot) => {
         res.render("pages/attachment/addCandidate", {
             layout: isFetch(req) ? false : "layouts/adminLayout",
-            title: "Tambah Kandidat - Smansekata Vote",
+            title: "Tambah Kandidat - SEKATA",
             page: "Tambah Kandidat",
             totalCandidate: snapshot.numChildren()
         });
@@ -195,7 +208,7 @@ app.get("/admin/edit-candidate", (req, res) => {
     db.ref(`kandidat/${candidateID}`).once("value", (snapshot) => {
         res.render("pages/attachment/editCandidate", {
             layout: isFetch(req) ? false : "layouts/adminLayout",
-            title: `Edit Kandidat ${candidateID} - Smansekata Vote`,
+            title: `Edit Kandidat ${candidateID} - SEKATA`,
             page: `Edit Kandidat ${candidateID}`,
             candidateID,
             candidateData: snapshot.val()
@@ -206,7 +219,7 @@ app.get("/admin/edit-candidate", (req, res) => {
 app.get("/login", (req, res) => {
     res.render("pages/login", {
         layout: isFetch(req) ? false : "layouts/tpsLayout",
-        title: "TPS Login - Smansekata Vote",
+        title: "TPS Login - SEKATA",
         page: "Login",
     });
 });
@@ -215,16 +228,16 @@ app.get("/login", (req, res) => {
 app.get("/TPS/dashboard", (req, res) => {
     res.render("pages/tps/tpsDashboard", {
         layout: isFetch(req) ? false : "layouts/tpsLayout",
-        title: "TPS Dashboard - Smansekata Vote",
+        title: "TPS Dashboard - SEKATA",
         page: "TPS Dashboard"
     });
 });
 
-app.get("/TPS/vote", verifyTPSAuth,(req, res) => {
+app.get("/TPS/vote", verifyTPSAuth, tpsCheck,(req, res) => {
     db.ref("kandidat").once("value", (snapshot) => {
         res.render("pages/tps/tpsVote", {
             layout: isFetch(req) ? false : "layouts/tpsLayout",
-            title: "TPS Dashboard - Smansekata Vote",
+            title: "TPS Dashboard - SEKATA",
             page: "TPS vote",
             candidate: snapshot.val(),
             tpsID: req.tpsID
@@ -236,7 +249,7 @@ app.get("/admin/login", (req, res) => {
     res.render("pages/adminLogin", {
         layout: "layouts/tpsLayout",
         page: "Login",
-        title: "Admin Login - Smansekata Vote"
+        title: "Admin Login - SEKATA"
     });
 });
 
@@ -315,7 +328,8 @@ app.post("/tps/login", (req, res) => {
     db.ref(`TPS/${req.body.tps}`).once("value", (snapshot) => {
         if(snapshot.val()){
             if(snapshot.val().token == req.body.token){
-                  res.cookie("tpsToken", jwt.sign({tpsID: req.body.tps}, process.env.JWT_SECRET, {expiresIn: '1d'}), {
+                db.ref(`TPS/${req.body.tps}`).update({logged: 1});
+                res.cookie("tpsToken", jwt.sign({tpsID: req.body.tps}, process.env.JWT_SECRET, {expiresIn: '1d'}), {
                     httpOnly: true, 
                     secure: false,
                     sameSite: "lax",
@@ -352,8 +366,11 @@ app.post("/admin/login", (req,res) => {
 });
 
 app.post("/logout", (req, res) => {
-    res.clearCookie("token", {path: "/"});
-    res.clearCookie("tpsToken", {path: "/"});
+    db.ref(`TPS/${req.body.tps}`).update({
+        logged: 0
+    });
+    // res.clearCookie("token", {path: "/"});
+    // res.clearCookie("tpsToken", {path: "/"});
     res.json({msg: 1})
 });
 
