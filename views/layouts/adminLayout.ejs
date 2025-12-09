@@ -9,6 +9,10 @@
     <script src="/libs/tailwind.js"></script>
     <script src="/libs/socket.io.min.js"></script>
     <script>
+        function $id(id) {return document.getElementById(id);}
+        function $qAll(q) {return document.querySelectorAll(q);}
+        function $q(q) {return document.querySelector(q);}
+        function $class(classname) {return document.getElementsByClassName(classname);}
         const socket = io();
         socket.on("connect", ()=>{console.log("socket connected");});
         socket.on("disconnect", ()=>{console.log("socket disconnected");});
@@ -26,26 +30,33 @@
     <script src="/scripts/tps.js"></script>
     <script src="/scripts/addCandidate.js"></script>
     <script src="/scripts/editCandidate.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.7.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.4"></script>
+    <script src="/scripts/voter.js"></script>
     <style>
         * {
             font-family: 'Poppins';
         }
     </style>
 </head>
-<body class="overflow-hidden select-none flex bg-neutral-200">
-    <%- include("../partials/adminSidebar") %>
-    <main class="flex-1 flex flex-col">
-        <div class="transition-all duration-200 fixed top-0 right-0 left-64 h-10 bg-neutral-50 shadow-md/5 flex items-center px-3" id="top-bar">
-            <button class="text-sky-950 transition-all duration-300 p-1 rounded-md outline outline-[rgb(0,0,0,0)] hover:outline-[rgb(0,0,0,.5)] outline-dashed" id="slider">
-                <svg width="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 12.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2 18.32H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2 6.32001H22" stroke="#082f49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <p class="ml-5 text-sm text-sky-950" id="position"><%=page%></p>
+<body class="overflow-hidden select-none flex bg-slate-50">
+    <div id="top-bar" class="z-20 transition-all  w-screen h-12 border-b border-b-slate-300 fixed flex items-center bg-slate-100">
+        <div class="h-12 flex items-center pl-4 text-slate-500 gap-3" id="admin">
+            <div class="flex justify-center items-center text-white rounded-full h-7 w-7 bg-gradient-to-tl from-sky-700 to-sky-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <p class="font-bold">Administrator</p>
         </div>
-        <div id="content" class="min-w-0 pt-14 px-4 max-h-screen h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
+           / <!--  -->
+        <p class="ml-5 text-sm text-stone-600" id="position"><%= page%></p>
+    </div>
+
+    <%- include("../partials/adminSidebar") %>
+    
+    <main class="flex-1 flex flex-col mt-12 ml-15 w-[calc(100svw-0.25rem*5)] h-[calc(100svh-0.25rem*12)]">
+        <div id="content" class="min-w-0 max-h-screen h-screen flex-1 overflow-y-auto scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400">
             <%- body %>
         </div>
     </main>

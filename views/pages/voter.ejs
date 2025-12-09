@@ -1,1 +1,30 @@
-<h1>this is log</h1>
+<div class="flex relative h-full">
+    <!-- side -->
+    <div id="side" class="transition-all flex flex-col h-full w-55 border-r border-r-slate-300 bg-slate-100">
+        <div class="w-full flex items-center pl-2 border-b border-b-slate-300 font-bold text-slate-500 text-sm h-10">Tabel Pemilih</div>
+        <div class="h-full w-full p-2">
+            <div class="w-full border-b border-b-slate-300 pb-2 mb-2">
+                <button class="w-full h-7 rounded-sm  hover:bg-slate-400 border-dashed flex items-center justify-center text-xs text-slate-50 transition-all bg-slate-500">+ Import CSV/XLSX</button>
+            </div>
+            <div class="w-full h-full text-xs text-slate-500 font-light" id="tabel-pemilih">
+                <!-- <p class="text-center italic">Tidak ada pemilih terdaftar</p> -->
+                <div class="data-pemilih hover:bg-slate-200 pl-2 text-slate-700 flex items-center h-7 w-full">Kelas X IPS 5</div>
+                <div class="data-pemilih hover:bg-slate-200 pl-2 text-slate-700 flex items-center h-7 w-full">Kelas X IPS 5</div>
+                <div class="data-pemilih hover:bg-slate-200 pl-2 text-slate-700 flex items-center h-7 w-full">Kelas X IPS 5</div>
+                <div class="data-pemilih hover:bg-slate-200 pl-2 text-slate-700 flex items-center h-7 w-full">Kelas X IPS 5</div>
+                <div class="data-pemilih hover:bg-slate-200 pl-2 text-slate-700 flex items-center h-7 w-full">Kelas X IPS 5</div>
+            </div>
+        </div>
+    </div>
+    <div class="h-full w-full flex flex-col">
+        <!-- bar -->
+        <div class="w-full h-10 bg-slate-100 border-b border-b-slate-300 flex">
+            <button onclick="sideToggle()" class="w-10 border-r border-r-slate-300 flex justify-center items-center bg-slate-200 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-close-icon lucide-panel-right-close"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/><path d="m8 9 3 3-3 3"/></svg></button>
+        </div>
+
+        <!-- content -->
+        <div class="w-full h-full"></div>
+    </div>
+
+    <script>voter()</script>
+</div>
