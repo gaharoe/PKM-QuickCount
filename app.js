@@ -60,7 +60,6 @@ function generate6digit(){
 let totalCandidate = 0;
 let totalTPS = 0;
 io.on("connection", async (socket) => {
-    console.log(socket.handshake.query.tpsID);
     socket.on("admin-dashboard-request-charts", () => {
         db.ref("kandidat").on("value", (snapshot) => {
             totalCandidate = snapshot.numChildren();
@@ -138,7 +137,6 @@ io.on("connection", async (socket) => {
 
     socket.on("tps-logged", (id) => {
         io.to(socket.id).emit("msg", "hello");
-        console.log(socket.id);
     });
 });
 

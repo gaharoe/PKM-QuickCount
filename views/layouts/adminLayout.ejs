@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%=title%></title>
     <link rel="stylesheet" href="/libs/font-poppins.css">
-    <link rel="stylesheet" href="/styles/sweetalert2.min.css">
     <script src="/libs/tailwind.js"></script>
-    <script src="/libs/socket.io.min.js"></script>
+    <link rel="stylesheet" href="/styles/sweetalert2.min.css">
+    <!-- <script src="/libs/socket.io.min.js"></script> -->
     <script>
         function $id(id) {return document.getElementById(id);}
         function $qAll(q) {return document.querySelectorAll(q);}
         function $q(q) {return document.querySelector(q);}
         function $class(classname) {return document.getElementsByClassName(classname);}
-        const socket = io();
-        socket.on("connect", ()=>{console.log("socket connected");});
-        socket.on("disconnect", ()=>{console.log("socket disconnected");});
-        socket.on("connect_error", ()=>{console.log("socket connection error");});
+        // const socket = io();
+        // socket.on("connect", ()=>{console.log("socket connected");});
+        // socket.on("disconnect", ()=>{console.log("socket disconnected");});
+        // socket.on("connect_error", ()=>{console.log("socket connection error");});
     </script>
     <script src="/libs/sweetalert2.min.js"></script>
 
@@ -43,14 +43,16 @@
 </head>
 <body class="overflow-hidden select-none flex bg-slate-50">
     <div id="top-bar" class="z-20 transition-all  w-screen h-12 border-b border-b-slate-300 fixed flex items-center bg-slate-100">
-        <div class="h-12 flex items-center pl-4 text-slate-500 gap-3" id="admin">
-            <div class="flex justify-center items-center text-white rounded-full h-7 w-7 bg-gradient-to-tl from-sky-700 to-sky-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="flex gap-5 items-center">
+            <div class="h-12 flex items-center pl-4 text-slate-500 gap-3" id="admin">
+                <div class="flex justify-center items-center text-white rounded-full h-7 w-7 bg-gradient-to-tl from-sky-700 to-sky-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <p class="font-bold">Administrator</p>
             </div>
-            <p class="font-bold">Administrator</p>
+            <p class=" text-xs text-slate-300">/</p>
+            <p class=" text-sm text-slate-500" id="position"><%= page%></p>
         </div>
-           / <!--  -->
-        <p class="ml-5 text-sm text-stone-600" id="position"><%= page%></p>
     </div>
 
     <%- include("../partials/adminSidebar") %>
